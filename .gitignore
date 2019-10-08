@@ -1,2 +1,3 @@
 *.csv
 *.mf4
+__pycache__

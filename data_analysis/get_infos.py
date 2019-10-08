@@ -185,19 +185,41 @@ def signal_frequences(input_path):
   print('=====Signal frequences=====')
   file = os.listdir(input_path)[0]
   mdf_file = MDF(os.path.join(input_path, file))
-  signals = mdf_file.iter_channels(skip_master=True)
+  # filtered_mdf = mdf_file.filter(['can0_LWI_Lenkradwinkel', 'can0_LWI_VZ_Lenkradwinkel', 'can0_ESP_Fahrer_bremst', 'can0_ESP_Bremsdruck', 'can0_MO_Fahrpedalrohwert_01', 'can0_MO_Kuppl_schalter', 'can0_MO_Drehzahl_01', 'can0_MO_Gangposition', 'can0_ESP_v_Signal', 'can0_ESP_HL_Fahrtrichtung', 'can0_ESP_HR_Fahrtrichtung'])
+  # signals = filtered_mdf.iter_channels(skip_master=True)
   sf = dict()
-  for signal in signals:
+  count = 0
+  for signal in mdf_file:
     f = len(signal.timestamps) / (signal.timestamps[-1] - signal.timestamps[0])
     sf[signal.name[5:]] = f
-    print('%s: %.2f Hz' % (signal.name[5:], f))
+    print('%s: %.2f Hz' % (signal.name, f))
+    count += len(signal.timestamps)
 
-  plt.figure(4)
-  plt.bar(range(len(sf)), list(sf.values()), align='center')
-  plt.yticks(np.arange(0, max(sf.values()), 10))
-  plt.xticks(range(len(sf)), list(sf.keys()), rotation='vertical')
+  print('Count: %d' % count)
+  # plt.figure(4)
+  # plt.bar(range(len(sf)), list(sf.values()), align='center')
+  # plt.yticks(np.arange(0, max(sf.values()), 10))
+  # plt.xticks(range(len(sf)), list(sf.keys()), rotation='vertical')
   
   
+def plot_all_trips(trips):
+  print('=====Plot all trips=====')
+  plt.figure(1)
+  ax = plt.subplot()
+  ax.xaxis.set_major_formatter(DateFormatter('%H:%M:%S'))
+
+  for d in trips:
+    ts = []
+    for trip in trips[d]:
+      for t in trip:
+        tt = datetime.fromtimestamp(int(int(t)/1000000000))
+        ts.append(tt)
+    plt.plot(ts[:-1], np.array([d[:5]] * len(ts[:-1])), 'o', markersize=1, label=d[:5])
+
+  plt.legend()
+  plt.ylabel('Driver')
+  plt.xlabel('Time')
+  plt.title('Trips')
 
 def main():
 
@@ -230,19 +252,20 @@ def main():
     print('The mf4 input path specified is not a directory')
     sys.exit()
 
-  print_ids(csv_input_path)
-  print_times(csv_input_path)
-  plot_times(csv_input_path)
-  trips = get_trips(mf4_input_path)
-  print_n_plot_total_trip_time(trips)
-  print_days_of_trips(mf4_input_path)
-  i = 100
-  for d in trips:
-    for trip in trips[d]:
-      plot_velocity(d, trip, csv_input_path, i)
-      i += 1
+  # print_ids(csv_input_path)
+  # print_times(csv_input_path)
+  # plot_times(csv_input_path)
+  # trips = get_trips(mf4_input_path)
+  # print_n_plot_total_trip_time(trips)
+  # plot_all_trips(trips)
+  # print_days_of_trips(mf4_input_path)
+  # i = 100
+  # for d in trips:
+  #   for trip in trips[d]:
+  #     plot_velocity(d, trip, csv_input_path, i)
+  #     i += 1
 
   signal_frequences(mf4_input_path)
-  plt.show()
+  # plt.show()
 if __name__ == "__main__":
   main()

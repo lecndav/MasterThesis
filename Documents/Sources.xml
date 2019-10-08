@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<b:Sources xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" SelectedStyle="">
+<b:Source>
+<b:Year>2018</b:Year>
+<b:BIBTEX_Entry>inproceedings</b:BIBTEX_Entry>
+<b:SourceType>ConferenceProceedings</b:SourceType>
+<b:Title>Driver Identification via Brake Pedal Signals — A Replication and Advancement of Existing Techniques</b:Title>
+<b:Tag>Gahr2018</b:Tag>
+<b:Publisher>IEEE</b:Publisher>
+<b:BookTitle>2018 21st International Conference on Intelligent Transportation Systems (ITSC)</b:BookTitle>
+<b:DOI>10.1109/itsc.2018.8569510</b:DOI>
+<b:Author>
+<b:Author>
+<b:NameList>
+<b:Person>
+<b:Last>Gahr</b:Last>
+<b:First>Bernhard</b:First>
+</b:Person>
+<b:Person>
+<b:Last>Ryder</b:Last>
+<b:First>Benjamin</b:First>
+</b:Person>
+<b:Person>
+<b:Last>Dahlinger</b:Last>
+<b:First>Andre</b:First>
+</b:Person>
+<b:Person>
+<b:Last>Wortmann</b:Last>
+<b:First>Felix</b:First>
+</b:Person>
+</b:NameList>
+</b:Author>
+</b:Author>
+<b:Month>11</b:Month>
+<b:ConferenceName>2018 21st International Conference on Intelligent Transportation Systems (ITSC)</b:ConferenceName>
+</b:Source>
+<b:Source>
+<b:Year>2019</b:Year>
+<b:BIBTEX_Entry>techreport</b:BIBTEX_Entry>
+<b:SourceType>Report</b:SourceType>
+<b:Title>Gartner Says 5.8 Billion Enterprise and Automotive IoT Endpoints Will Be in Use in 2020</b:Title>
+<b:Tag>Gartner2019</b:Tag>
+<b:Author>
+<b:Author>
+<b:NameList>
+<b:Person>
+<b:Last>Gartner</b:Last>
+<b:First>Inc.</b:First>
+</b:Person>
+</b:NameList>
+</b:Author>
+</b:Author>
+<b:ThesisType>Tech. rep.</b:ThesisType>
+</b:Source>
+<b:Source>
+<b:Year>2018</b:Year>
+<b:Volume>5</b:Volume>
+<b:BIBTEX_Entry>article</b:BIBTEX_Entry>
+<b:SourceType>JournalArticle</b:SourceType>
+<b:Title>Who is behind the wheel? Driver identification and fingerprinting</b:Title>
+<b:Tag>Ezzini2018</b:Tag>
+<b:Publisher>Springer Nature</b:Publisher>
+<b:DOI>10.1186/s40537-018-0118-7</b:DOI>
+<b:Author>
+<b:Author>
+<b:NameList>
+<b:Person>
+<b:Last>Ezzini</b:Last>
+<b:First>Saad</b:First>
+</b:Person>
+<b:Person>
+<b:Last>Berrada</b:Last>
+<b:First>Ismail</b:First>
+</b:Person>
+<b:Person>
+<b:Last>Ghogho</b:Last>
+<b:First>Mounir</b:First>
+</b:Person>
+</b:NameList>
+</b:Author>
+</b:Author>
+<b:Month>2</b:Month>
+<b:JournalName>Journal of Big Data</b:JournalName>
+<b:Number>1</b:Number>
+</b:Source>
+<b:Source>
+<b:Year>2016</b:Year>
+<b:BIBTEX_Entry>inproceedings</b:BIBTEX_Entry>
+<b:SourceType>ConferenceProceedings</b:SourceType>
+<b:Title>Driver identification using automobile sensor data from a single turn</b:Title>
+<b:Tag>Hallac2016</b:Tag>
+<b:Publisher>IEEE</b:Publisher>
+<b:BookTitle>2016 IEEE 19th International Conference on Intelligent Transportation Systems (ITSC)</b:BookTitle>
+<b:DOI>10.1109/itsc.2016.7795670</b:DOI>
+<b:Author>
+<b:Author>
+<b:NameList>
+<b:Person>
+<b:Last>Hallac</b:Last>
+<b:First>David</b:First>
+</b:Person>
+<b:Person>
+<b:Last>Sharang</b:Last>
+<b:First>Abhijit</b:First>
+</b:Person>
+<b:Person>
+<b:Last>Stahlmann</b:Last>
+<b:First>Rainer</b:First>
+</b:Person>
+<b:Person>
+<b:Last>Lamprecht</b:Last>
+<b:First>Andreas</b:First>
+</b:Person>
+<b:Person>
+<b:Last>Huber</b:Last>
+<b:First>Markus</b:First>
+</b:Person>
+<b:Person>
+<b:Last>Roehder</b:Last>
+<b:First>Martin</b:First>
+</b:Person>
+<b:Person>
+<b:Last>Sosic</b:Last>
+<b:First>Rok</b:First>
+</b:Person>
+<b:Person>
+<b:Last>Leskovec</b:Last>
+<b:First>Jure</b:First>
+</b:Person>
+</b:NameList>
+</b:Author>
+</b:Author>
+<b:Month>11</b:Month>
+<b:ConferenceName>2016 IEEE 19th International Conference on Intelligent Transportation Systems (ITSC)</b:ConferenceName>
+</b:Source>
+<b:Source>
+<b:Year>2016</b:Year>
+<b:Volume>2016</b:Volume>
+<b:BIBTEX_Entry>article</b:BIBTEX_Entry>
+<b:SourceType>JournalArticle</b:SourceType>
+<b:Title>Automobile Driver Fingerprinting</b:Title>
+<b:Tag>Enev2016</b:Tag>
+<b:Publisher>Walter de Gruyter GmbH</b:Publisher>
+<b:DOI>10.1515/popets-2015-0029</b:DOI>
+<b:Author>
+<b:Author>
+<b:NameList>
+<b:Person>
+<b:Last>Enev</b:Last>
+<b:First>Miro</b:First>
+</b:Person>
+<b:Person>
+<b:Last>Takakuwa</b:Last>
+<b:First>Alex</b:First>
+</b:Person>
+<b:Person>
+<b:Last>Koscher</b:Last>
+<b:First>Karl</b:First>
+</b:Person>
+<b:Person>
+<b:Last>Kohno</b:Last>
+<b:First>Tadayoshi</b:First>
+</b:Person>
+</b:NameList>
+</b:Author>
+</b:Author>
+<b:Pages>34-50</b:Pages>
+<b:Month>1</b:Month>
+<b:JournalName>Proceedings on Privacy Enhancing Technologies</b:JournalName>
+<b:Number>1</b:Number>
+</b:Source>
+<b:Source>
+<b:Year>2012</b:Year>
+<b:BIBTEX_Entry>book</b:BIBTEX_Entry>
+<b:SourceType>Book</b:SourceType>
+<b:Title>Machine Learning for Hackers</b:Title>
+<b:Tag>Conway2012</b:Tag>
+<b:Publisher>O'Reilly Media, Inc, USA</b:Publisher>
+<b:URL>https://www.ebook.de/de/product/16540839/drew_conway_machine_learning_for_hackers.html</b:URL>
+<b:Author>
+<b:Author>
+<b:NameList>
+<b:Person>
+<b:Last>Conway</b:Last>
+<b:First>Drew</b:First>
+</b:Person>
+</b:NameList>
+</b:Author>
+</b:Author>
+<b:Month>3</b:Month>
+<b:Day>6</b:Day>
+<b:StandardNumber> ISBN: 1449303714</b:StandardNumber>
+</b:Source>
+</b:Sources>
