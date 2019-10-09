@@ -26,9 +26,9 @@ def order_files(input_path):
 
   return driver
 
-def process_trips(ts, id, dir):
+def to_hdf5(ts, id, dir):
   signal_speed = 'can0_ESP_v_Signal'
-  d = None
+  hdf5_file = './hdf5/data.hdf'
   for t in ts:
     file = os.path.join(dir, '%s_%s.mf4' % (t, id))
     mdf_file = MDF(file)
@@ -37,13 +37,7 @@ def process_trips(ts, id, dir):
     data.index = (data.index * 1000000000 + float(t))
     data.index = data.index.values.astype('datetime64[ns]')
     data.index = pandas.to_datetime(data.index)
-    if d is None:
-      d = data
-    else:
-      d = d.append(data, sort=False)
-  
-  return d
-
+    data.to_hdf(hdf5_file, id.replace('-', '_'), append=True)
 
 
 def main():
@@ -67,14 +61,14 @@ def main():
 
   trips = order_files(mdf_input_path)
   for id in trips:
-    data = process_trips(trips[id][:1], id, mdf_input_path)
-    data = data.stack()
-    data.index.rename(['time', 'id'], inplace=True)
-    data = data.reset_index()
-    extracted_features = extract_features(data, column_id='id', column_sort='time')
+    data = process_trips(trips[id], id, mdf_input_path)
+    # data = data.stack()
+    # data.index.rename(['time', 'id'], inplace=True)
+    # data = data.reset_index()
+    # extracted_features = extract_features(data, column_id='id', column_sort='time')
     # impute(extracted_features)
     # features_filtered = select_features(extracted_features, y)
-    print(extracted_features)
+    # print(extracted_features)
     break
 
 
