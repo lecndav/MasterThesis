@@ -2,6 +2,7 @@ import argparse
 import pathlib
 import pandas
 import os
+import sys
 import matplotlib.pyplot as plt
 from datetime import datetime
 from asammdf import MDF
@@ -27,7 +28,6 @@ def order_files(input_path):
   return driver
 
 def to_hdf5(ts, id, dir):
-  signal_speed = 'can0_ESP_v_Signal'
   hdf5_file = './hdf5/data.hdf'
   for t in ts:
     file = os.path.join(dir, '%s_%s.mf4' % (t, id))
@@ -61,15 +61,7 @@ def main():
 
   trips = order_files(mdf_input_path)
   for id in trips:
-    data = process_trips(trips[id], id, mdf_input_path)
-    # data = data.stack()
-    # data.index.rename(['time', 'id'], inplace=True)
-    # data = data.reset_index()
-    # extracted_features = extract_features(data, column_id='id', column_sort='time')
-    # impute(extracted_features)
-    # features_filtered = select_features(extracted_features, y)
-    # print(extracted_features)
-    break
+    to_hdf5(trips[id], id, mdf_input_path)
 
 
 main()
