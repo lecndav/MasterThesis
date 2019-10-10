@@ -1,13 +1,15 @@
 import argparse
 import pathlib
-import pandas
+import pandas as pd
 import os
+import sys
 import h5py
 import numpy as np
 import matplotlib.pyplot as plt
 from datetime import datetime
 from asammdf import MDF
 from tsfresh import extract_features
+from tsfresh.utilities.dataframe_functions import impute
 
 
 def main():
@@ -23,27 +25,21 @@ def main():
   # Execute the parse_args() method
   args = my_parser.parse_args()
 
-  hdf5_input_path = args.hdf5_input
+  hdf5_input = args.hdf5
 
-  if not os.path.isdir(hdf5_input_path):
+  if not os.path.isfile(hdf5_input):
     print('The hdf5 input path specified is not a directory')
     sys.exit()
 
-  for file in os.listdir(hdf5_input_path):
-    with h5py.File(file, 'r') as f:
-      # List all groups
-      print("Keys: %s" % f.keys())
-      a_group_key = list(f.keys())[0]
-
-      # Get the data
-      data = list(f[a_group_key])
-      data = data.stack()
-      data.index.rename(['time', 'id'], inplace=True)
-      data = data.reset_index()
-      extracted_features = extract_features(data, column_id='id', column_sort='time', n_jobs=10)
-      impute(extracted_features)
-      # features_filtered = select_features(extracted_features, y)
-      print(extracted_features)
+  # id = hdf5_input.split('/')[-1].split('.')[0]
+  data = pd.read_hdf(hdf5_input)
+  data = data.stack()
+  data.index.rename(['time', 'id'], inplace=True)
+  data = data.reset_index()
+  extracted_features = extract_features(data[:1000000], column_id='id', column_sort='time', n_jobs=10)
+  impute(extracted_features)
+  # features_filtered = select_features(extracted_features, y)
+  print(extracted_features)
 
 
 main()

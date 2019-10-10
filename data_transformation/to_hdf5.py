@@ -27,17 +27,17 @@ def order_files(input_path):
 
   return driver
 
-def to_hdf5(ts, id, dir):
-  hdf5_file = './hdf5/data.hdf'
+def to_hdf5(ts, id, mf4_dir, hdf_dir):
+  hdf_file = os.path.join(hdf_dir, '%s.hdf' % id[:5])
   for t in ts:
-    file = os.path.join(dir, '%s_%s.mf4' % (t, id))
+    file = os.path.join(mf4_dir, '%s_%s.mf4' % (t, id))
     mdf_file = MDF(file)
     filtered_mdf = mdf_file.filter(interesting_signals)
     data = filtered_mdf.to_dataframe()
     data.index = (data.index * 1000000000 + float(t))
     data.index = data.index.values.astype('datetime64[ns]')
     data.index = pandas.to_datetime(data.index)
-    data.to_hdf(hdf5_file, id.replace('-', '_'), append=True)
+    data.to_hdf(hdf_file, id.replace('-', '_'), append=True)
 
 
 def main():
@@ -50,10 +50,18 @@ def main():
                          required=True,
                          help='Input mdf file or directory')
 
+  my_parser.add_argument('-o',
+                         action='store',
+                         metavar='hdf_dir',
+                         type=str,
+                         required=True,
+                         help='HDF5 dir to write')
+
   # Execute the parse_args() method
   args = my_parser.parse_args()
 
   mdf_input_path = args.mdf_input
+  hdf_dir = args.o
 
   if not os.path.isdir(mdf_input_path):
     print('The mdf input path specified is not a directory')
@@ -61,7 +69,7 @@ def main():
 
   trips = order_files(mdf_input_path)
   for id in trips:
-    to_hdf5(trips[id], id, mdf_input_path)
+    to_hdf5(trips[id], id, mdf_input_path, hdf_dir)
 
 
 main()

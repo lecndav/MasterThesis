@@ -2,3 +2,4 @@
 *.mf4
 __pycache__
 *.hdf
+.vscode
