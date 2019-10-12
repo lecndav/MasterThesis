@@ -5,10 +5,6 @@ import os
 import sys
 import h5py
 import numpy as np
-from sklearn.utils import shuffle
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
-from sklearn import metrics
 
 
 def main():
@@ -21,37 +17,34 @@ def main():
                          required=True,
                          help='Input directory with source hdf5 files')
 
+  my_parser.add_argument('-o', '--output',
+                         action='store',
+                         metavar='hdf5_output',
+                         type=str,
+                         required=True,
+                         help='Output directory')
+
   # Execute the parse_args() method
   args = my_parser.parse_args()
 
   hdf5_input = args.input
+  hdf5_output = args.output
 
-  frames = []
   if not os.path.isdir(hdf5_input):
     print('The hdf5 input path specified is not a directory')
+    sys.exit()
+
+  if not os.path.isdir(hdf5_output):
+    print('The hdf5 ouput path specified is not a directory')
     sys.exit()
 
   for file in os.listdir(hdf5_input):
     if not file.endswith('.hdf'):
       continue
-
+    print('process %s' % file)
     data = pd.read_hdf(os.path.join(hdf5_input, file))
-    frames.append(data)
-
-  result = pd.concat(frames, sort=False)
-  result = shuffle(result)
-  columns = list(result.head())
-  columns.remove('class')
-  X = result[columns]
-  Y = result['class']
-  X = np.nan_to_num(X)
-  X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.1)
-
-  clf = RandomForestClassifier(n_estimators=500)
-  clf.fit(X_train, y_train)
-  y_pred = clf.predict(X_test)
-  print("Accuracy:" , metrics.accuracy_score(y_test, y_pred))
-
+    data = data[data['can0_ESP_v_Signal_max'] != 0]
+    data.to_hdf(os.path.join(hdf5_output, file), file.split('.')[0])
 
 
 main()
