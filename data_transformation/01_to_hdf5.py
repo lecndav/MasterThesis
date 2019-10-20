@@ -8,8 +8,6 @@ from datetime import datetime
 from asammdf import MDF
 from tsfresh import extract_features
 
-interesting_signals = ['can0_LWI_Lenkradwinkel', 'can0_LWI_VZ_Lenkradwinkel', 'can0_ESP_Fahrer_bremst', 'can0_ESP_Bremsdruck',
-                       'can0_MO_Drehzahl_01', 'can0_MO_Gangposition', 'can0_ESP_v_Signal',  'can0_ESP_HL_Fahrtrichtung', 'can0_ESP_HR_Fahrtrichtung', 'can0_LWI_VZ_Lenkradw_Geschw', 'can0_LWI_Lenkradw_Geschw', 'can0_ESP_Querbeschleunigung', 'can0_ESP_Laengsbeschl', 'can0_ESP_Gierrate', 'can0_ESP_VZ_Gierrate', 'can0_MO_Fahrpedalrohwert_01', 'can0_MO_Kuppl_schalter']
 
 def order_files(input_path):
   driver = dict()
@@ -54,8 +52,7 @@ def to_hdf5(ts, id, mf4_dir, hdf_dir):
   for t in ts:
     file = os.path.join(mf4_dir, '%s_%s.mf4' % (t, id))
     mdf_file = MDF(file)
-    filtered_mdf = mdf_file.filter(interesting_signals)
-    data = filtered_mdf.to_dataframe()
+    data = mdf_file.to_dataframe()
     data.index = (data.index * 1000000000 + float(t))
     data.index = data.index.values.astype('datetime64[ns]')
     data.index = pandas.to_datetime(data.index)
@@ -78,20 +75,35 @@ def main():
                          type=str,
                          required=True,
                          help='HDF5 dir to write')
-
+  
   my_parser.add_argument('-d', '--duration',
                          action='store',
                          metavar='duration',
-                         type=str,
+                         type=int,
                          required=False,
                          help='Duration in minutes')
 
   my_parser.add_argument('-t', '--trips',
                          action='store',
                          metavar='trips',
-                         type=str,
+                         type=int,
                          required=False,
                          help='Trip count')
+
+  my_parser.add_argument('-o', '--offset',
+                          action='store',
+                          metavar='offset',
+                          type=str,
+                          required=False,
+                          help='Offset for either trips (count) or duration (time [m])')
+  
+  my_parser.add_argument('-id', '--ids',
+                         action='store',
+                         metavar='ids',
+                         type=int,
+                         required=False,
+                         help='Amount of included IDs')
+
 
   # Execute the parse_args() method
   args = my_parser.parse_args()
@@ -100,6 +112,7 @@ def main():
   hdf_dir = args.output
   duration = None
   trip_count = None
+  offset = 0
   if args.duration:
     duration = int(args.duration)
   elif args.trips:
@@ -108,6 +121,9 @@ def main():
     print('Either sepcifiy duration or amount of trips')
     sys.exit(1)
 
+  if args.offset:
+    offset = args.offset
+
   if not os.path.isdir(mdf_input_path):
     print('The mdf input path specified is not a directory')
     sys.exit()
@@ -115,11 +131,18 @@ def main():
   files = order_files(mdf_input_path)
   trips = get_trips(files)
 
+  i = 0
+  l = len(trips)
+  if args.ids:
+    l = args.ids
   for id in trips:
+    i += 1
+    if i == l:
+      break
     if duration:
-      ts = files[id][:int(duration)]
+      ts = files[id][offset:duration]
     if trip_count:
-      ts = trips[id][:trip_count]
+      ts = trips[id][offset:trip_count]
       ts = [item for sublist in ts for item in sublist]
 
     to_hdf5(ts, id, mdf_input_path, hdf_dir)
