@@ -45,7 +45,9 @@ def main():
     print('process %s' % file)
     data = pd.read_hdf(os.path.join(hdf5_input, file))
     data['class'] = i
+    data.reset_index(drop=True, inplace=True)
     data.to_hdf(os.path.join(hdf5_output, '%d_%s' % (i, file)), file.split('.')[0])
     i += 1
+
 
 main()

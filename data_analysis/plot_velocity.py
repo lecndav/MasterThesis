@@ -7,8 +7,6 @@ import h5py
 import numpy as np
 import matplotlib.pyplot as plt
 from datetime import datetime
-from asammdf import MDF
-from tsfresh import extract_features
 
 
 def main():
@@ -31,7 +29,9 @@ def main():
     sys.exit()
 
   data = pd.read_hdf(hdf5_input)
-  data['can0_ESP_v_Signal'].plot()
+  data.dropna(inplace=True)
+  data.reset_index(drop=True, inplace=True)
+  data['can0_ESP_v_Signal_max'].plot()
   plt.show()
 
 

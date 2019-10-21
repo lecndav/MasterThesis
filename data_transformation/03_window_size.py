@@ -57,33 +57,35 @@ def main():
     new_column_names = dict()
     for n in column_names:
       new_column_names[n] = '%s_mean' % n
-    data_mean = data_mean.rename(columns=new_column_names)
+    data_mean.rename(columns=new_column_names, inplace=True)
 
     data_std = data.resample('%sL' % window_size).std()
     new_column_names = dict()
     for n in column_names:
       new_column_names[n] = '%s_std' % n
-    data_std = data_std.rename(columns=new_column_names)
+    data_std.rename(columns=new_column_names, inplace=True)
 
     data_min = data.resample('%sL' % window_size).min()
     new_column_names = dict()
     for n in column_names:
       new_column_names[n] = '%s_min' % n
-    data_min = data_min.rename(columns=new_column_names)
+    data_min.rename(columns=new_column_names, inplace=True)
 
     data_max = data.resample('%sL' % window_size).max()
     new_column_names = dict()
     for n in column_names:
       new_column_names[n] = '%s_max' % n
-    data_max = data_max.rename(columns=new_column_names)
+    data_max.rename(columns=new_column_names, inplace=True)
 
     data_median = data.resample('%sL' % window_size).median()
     new_column_names = dict()
     for n in column_names:
       new_column_names[n] = '%s_median' % n
-    data_median = data_median.rename(columns=new_column_names)
+    data_median.rename(columns=new_column_names, inplace=True)
 
     data = pd.concat([data_mean, data_max, data_median, data_min, data_std], axis=1, sort=False)
+    data.dropna(inplace=True)
+    data.reset_index(drop=True, inplace=True)
 
     data.to_hdf(os.path.join(hdf5_output, file), file.split('.')[0])
 

@@ -5,6 +5,7 @@ import os
 import sys
 import h5py
 import numpy as np
+import swifter
 
 
 def main():
@@ -43,8 +44,14 @@ def main():
       continue
     print('process %s' % file)
     data = pd.read_hdf(os.path.join(hdf5_input, file))
-    data = data.reset_index()
-    data = data.drop(columns='index', axis=1)
+    data['lenkradwinkel_tmp'] = data.swifter.apply(lambda row: row['can0_LWI_Lenkradwinkel'] * -1 if int(row['can0_LWI_VZ_Lenkradwinkel']) else row['can0_LWI_Lenkradwinkel'], axis=1)
+    data['lenkradgeschw_tmp'] = data.swifter.apply(lambda row: row['can0_LWI_Lenkradw_Geschw'] * -1 if int(
+        row['can0_LWI_VZ_Lenkradw_Geschw']) else row['can0_LWI_Lenkradw_Geschw'], axis=1)
+    data['gierrate_tmp'] = data.swifter.apply(lambda row: row['can0_ESP_Gierrate'] * -1 if int(
+        row['can0_ESP_VZ_Gierrate']) else row['can0_ESP_Gierrate'], axis=1)
+    data.drop(columns=['can0_LWI_Lenkradwinkel', 'can0_LWI_VZ_Lenkradwinkel', 'can0_LWI_Lenkradw_Geschw', 'can0_LWI_VZ_Lenkradw_Geschw', 'can0_ESP_Gierrate', 'can0_ESP_VZ_Gierrate'], inplace=True)
+    data.rename(columns={'lenkradwinkel_tmp': 'can0_LWI_Lenkradwinkel', 'lenkradgeschw_tmp': 'can0_LWI_Lenkradw_Geschw', 'gierrate_tmp': 'can0_ESP_Gierrate'}, inplace=True)
+
     data.to_hdf(os.path.join(hdf5_output, file), file.split('.')[0])
 
 main()

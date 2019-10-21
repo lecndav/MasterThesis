@@ -45,13 +45,15 @@ def main():
   X = result[columns]
   Y = result['class']
   X = np.nan_to_num(X)
-  X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.1)
+  X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.2)
 
-  clf = RandomForestClassifier(n_estimators=500)
+  clf = RandomForestClassifier(n_estimators=500, n_jobs=-1)
   clf.fit(X_train, y_train)
   y_pred = clf.predict(X_test)
   print("Accuracy:" , metrics.accuracy_score(y_test, y_pred))
-
+  print('Mean Absolute Error:', metrics.mean_absolute_error(y_test, y_pred))
+  print('Mean Squared Error:', metrics.mean_squared_error(y_test, y_pred))
+  print('Root Mean Squared Error:', np.sqrt(metrics.mean_squared_error(y_test, y_pred)))
 
 
 main()
