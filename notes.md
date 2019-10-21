@@ -1,9 +1,12 @@
 # Notizen zu Resultate und Daten
 
+## 20.10
+
+transform_mdf.py erstellt. Tranformiert Signale mit VZ und filtert nur auf interessante (siehe source code). Dateigröße davor: 455624, danach: 307960.
+
 ## Resultate
 
-8 Minuten 10 Fahrer >85%
->8 Minunten 10 Fahrer ~ 60%
+8 Minuten 10 Fahrer >86%
 xx Minuten 2,3 Fahrer >95%
 
 ## Daten
