@@ -3,10 +3,8 @@ import pathlib
 import pandas
 import os
 import sys
-import matplotlib.pyplot as plt
 from datetime import datetime
 from asammdf import MDF
-from tsfresh import extract_features
 
 
 def order_files(input_path):
@@ -90,7 +88,7 @@ def main():
                          required=False,
                          help='Trip count')
 
-  my_parser.add_argument('-o', '--offset',
+  my_parser.add_argument('--offset',
                           action='store',
                           metavar='offset',
                           type=str,

@@ -47,7 +47,7 @@ def main():
   X = np.nan_to_num(X)
   X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.2)
 
-  clf = RandomForestClassifier(n_estimators=500, n_jobs=-1)
+  clf = RandomForestClassifier(n_estimators=2000, n_jobs=-1)
   clf.fit(X_train, y_train)
   y_pred = clf.predict(X_test)
   print("Accuracy:" , metrics.accuracy_score(y_test, y_pred))

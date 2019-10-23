@@ -76,7 +76,5 @@ def main():
     # filter file with VZ signals
     filtered_mdf = mdf_file.filter(interesting_signals)
     filtered_mdf.save(os.path.join(mf4_output, file))
-    
-    break
 
 main()
