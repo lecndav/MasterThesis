@@ -1,6 +1,7 @@
 import argparse
 import pathlib
 import pandas
+import random
 import os
 import sys
 from datetime import datetime
@@ -73,7 +74,7 @@ def main():
                          type=str,
                          required=True,
                          help='HDF5 dir to write')
-  
+
   my_parser.add_argument('-d', '--duration',
                          action='store',
                          metavar='duration',
@@ -88,13 +89,18 @@ def main():
                          required=False,
                          help='Trip count')
 
+  my_parser.add_argument('-s', '--shuffle',
+                         action='store_true',
+                         required=False,
+                         help='Shuffle either trips or all data')
+
   my_parser.add_argument('--offset',
                           action='store',
                           metavar='offset',
                           type=str,
                           required=False,
                           help='Offset for either trips (count) or duration (time [m])')
-  
+
   my_parser.add_argument('-id', '--ids',
                          action='store',
                          metavar='ids',
@@ -110,6 +116,7 @@ def main():
   hdf_dir = args.output
   duration = None
   trip_count = None
+  shuffle = args.shuffle
   offset = 0
   if args.duration:
     duration = int(args.duration)
@@ -128,6 +135,12 @@ def main():
 
   files = order_files(mdf_input_path)
   trips = get_trips(files)
+
+  if shuffle:
+    for id in files:
+      random.shuffle(files[id])
+    for id in trips:
+      random.shuffle(trips[id])
 
   i = 0
   l = len(trips)
