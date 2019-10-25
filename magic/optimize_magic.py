@@ -6,14 +6,14 @@ import sys
 import h5py
 import numpy as np
 from sklearn.utils import shuffle
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
 
 
 def main():
 
-  my_parser = argparse.ArgumentParser(description='Magic random forest classifier')
+  my_parser = argparse.ArgumentParser(description='Optimize magic.')
   my_parser.add_argument('-i', '--input',
                          action='store',
                          metavar='hdf5_input',
@@ -45,20 +45,31 @@ def main():
   X = result[columns]
   Y = result['class']
   X = np.nan_to_num(X)
+
+
   X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.1)
 
   clf = RandomForestClassifier(n_estimators=1000, n_jobs=-1, random_state=1, min_samples_leaf=1)
-  clf.fit(X_train, y_train)
-  y_pred = clf.predict(X_test)
 
+  n_estimators = [500, 800, 1000, 1200, 1400, 1600, 1800, 2000]
+  max_depth = [10, 15, 25, 30, 40, 50, 60]
+  min_samples_leaf = [1, 2, 5, 10] 
+  criterion = ['gini', 'entropy']
+
+  hyperF = dict(
+    n_estimators = n_estimators,
+    max_depth = max_depth, 
+    min_samples_leaf = min_samples_leaf,
+    criterion = criterion
+    )
+
+  gridF = GridSearchCV(clf, hyperF, cv = 3, verbose = 1, n_jobs = -1)
+  bestF = gridF.fit(X_train, y_train)
+
+  y_pred = bestF.predict(X_test)
+  print(bestF.score(X_train, y_train))
+  print(gridF.best_params_)
   print("Accuracy:" , metrics.accuracy_score(y_test, y_pred))
-  print('Mean Absolute Error:', metrics.mean_absolute_error(y_test, y_pred))
-  print('Mean Squared Error:', metrics.mean_squared_error(y_test, y_pred))
-  print('Root Mean Squared Error:', np.sqrt(metrics.mean_squared_error(y_test, y_pred)))
-
-  fti = clf.feature_importances_
-  for i, feat in enumerate(columns):
-    print('\t{0:20s} : {1:>.6f}'.format(feat, fti[i]))
 
 
 main()
