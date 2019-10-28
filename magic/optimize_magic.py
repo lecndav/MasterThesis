@@ -53,17 +53,17 @@ def main():
 
   n_estimators = [500, 800, 1000, 1200, 1400, 1600, 1800, 2000]
   max_depth = [10, 15, 25, 30, 40, 50, 60]
-  min_samples_leaf = [1, 2, 5, 10] 
+  min_samples_leaf = [1, 2, 5, 10]
   criterion = ['gini', 'entropy']
 
   hyperF = dict(
     n_estimators = n_estimators,
-    max_depth = max_depth, 
+    max_depth = max_depth,
     min_samples_leaf = min_samples_leaf,
     criterion = criterion
     )
 
-  gridF = GridSearchCV(clf, hyperF, cv = 3, verbose = 1, n_jobs = -1)
+  gridF = GridSearchCV(clf, hyperF, cv=3, verbose=1, n_jobs=-1)
   bestF = gridF.fit(X_train, y_train)
 
   y_pred = bestF.predict(X_test)
