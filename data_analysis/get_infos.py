@@ -185,8 +185,8 @@ def signal_frequences(input_path):
   print('=====Signal frequences=====')
   file = os.listdir(input_path)[0]
   mdf_file = MDF(os.path.join(input_path, file))
-  # filtered_mdf = mdf_file.filter(['can0_LWI_Lenkradwinkel', 'can0_LWI_VZ_Lenkradwinkel', 'can0_ESP_Fahrer_bremst', 'can0_ESP_Bremsdruck', 'can0_MO_Fahrpedalrohwert_01', 'can0_MO_Kuppl_schalter', 'can0_MO_Drehzahl_01', 'can0_MO_Gangposition', 'can0_ESP_v_Signal', 'can0_ESP_HL_Fahrtrichtung', 'can0_ESP_HR_Fahrtrichtung'])
-  # signals = filtered_mdf.iter_channels(skip_master=True)
+  mdf_file = mdf_file.filter(['can0_LWI_Lenkradwinkel', 'can0_LWI_VZ_Lenkradwinkel', 'can0_ESP_Fahrer_bremst', 'can0_ESP_Bremsdruck', 'can0_MO_Fahrpedalrohwert_01', 'can0_MO_Kuppl_schalter', 'can0_MO_Drehzahl_01', 'can0_MO_Gangposition', 'can0_ESP_v_Signal', 'can0_ESP_HL_Fahrtrichtung', 'can0_ESP_HR_Fahrtrichtung'])
+  signals = mdf_file.iter_channels(skip_master=True)
   sf = dict()
   count = 0
   for signal in mdf_file:
@@ -195,11 +195,12 @@ def signal_frequences(input_path):
     print('%s: %.2f Hz' % (signal.name, f))
     count += len(signal.timestamps)
 
-  print('Count: %d' % count)
-  # plt.figure(4)
-  # plt.bar(range(len(sf)), list(sf.values()), align='center')
-  # plt.yticks(np.arange(0, max(sf.values()), 10))
-  # plt.xticks(range(len(sf)), list(sf.keys()), rotation='vertical')
+  # print('Count: %d' % count)
+  plt.figure(4)
+  plt.bar(range(len(sf)), list(sf.values()), align='center')
+  plt.yticks(np.arange(0, max(sf.values()), 10))
+  plt.ylabel('Frequency [Hz]')
+  plt.xticks(range(len(sf)), list(sf.keys()), rotation='vertical')
   
   
 def plot_all_trips(trips):
@@ -224,13 +225,6 @@ def plot_all_trips(trips):
 def main():
 
   my_parser = argparse.ArgumentParser(description='Get information from files')
-  my_parser.add_argument('-c', '--csv-input',
-                         action='store',
-                         metavar='csv_input',
-                         type=str,
-                         required=True,
-                         help='Input csv file or directory')
-
   my_parser.add_argument('-m', '--mf4-input',
                          action='store',
                          metavar='mf4_input',
@@ -240,13 +234,7 @@ def main():
 
   # Execute the parse_args() method
   args = my_parser.parse_args()
-
-  csv_input_path = args.csv_input
   mf4_input_path = args.mf4_input
-
-  if not os.path.isdir(csv_input_path):
-    print('The csv input path specified is not a directory')
-    sys.exit()
 
   if not os.path.isdir(mf4_input_path):
     print('The mf4 input path specified is not a directory')
@@ -266,6 +254,6 @@ def main():
   #     i += 1
 
   signal_frequences(mf4_input_path)
-  # plt.show()
+  plt.show()
 if __name__ == "__main__":
   main()
