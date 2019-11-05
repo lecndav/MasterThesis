@@ -117,10 +117,11 @@
 
 @TechReport{ASAM14,
   author      = {Association for Standardization of Automation and Measuring Systems},
-  title       = {Format Specification MDF Format v. 3.3.1},
+  title       = {Format Specification MDF Format},
   institution = {Association for Standardization of Automation and Measuring Systems},
   year        = {2014},
   type        = {Standard},
+  number      = {3.3.1},
 }
 
 @Comment{jabref-meta: databaseType:bibtex;}

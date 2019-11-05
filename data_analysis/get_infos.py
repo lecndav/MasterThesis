@@ -152,7 +152,7 @@ def print_days_of_trips(input_path):
       driver[id] = []
     driver[id].append(datetime.fromtimestamp(
         timestamp/1000000000).strftime('%d.%m.%Y'))
-  
+
   for d in driver:
     # remove duplicates
     driver[d] = list(dict.fromkeys(driver[d]))
@@ -185,11 +185,11 @@ def signal_frequences(input_path):
   print('=====Signal frequences=====')
   file = os.listdir(input_path)[0]
   mdf_file = MDF(os.path.join(input_path, file))
-  mdf_file = mdf_file.filter(['can0_LWI_Lenkradwinkel', 'can0_LWI_VZ_Lenkradwinkel', 'can0_ESP_Fahrer_bremst', 'can0_ESP_Bremsdruck', 'can0_MO_Fahrpedalrohwert_01', 'can0_MO_Kuppl_schalter', 'can0_MO_Drehzahl_01', 'can0_MO_Gangposition', 'can0_ESP_v_Signal', 'can0_ESP_HL_Fahrtrichtung', 'can0_ESP_HR_Fahrtrichtung'])
+  # mdf_file = mdf_file.filter(['can0_LWI_Lenkradwinkel', 'can0_LWI_VZ_Lenkradwinkel', 'can0_ESP_Fahrer_bremst', 'can0_ESP_Bremsdruck', 'can0_MO_Fahrpedalrohwert_01', 'can0_MO_Kuppl_schalter', 'can0_MO_Drehzahl_01', 'can0_MO_Gangposition', 'can0_ESP_v_Signal', 'can0_ESP_HL_Fahrtrichtung', 'can0_ESP_HR_Fahrtrichtung'])
   signals = mdf_file.iter_channels(skip_master=True)
   sf = dict()
   count = 0
-  for signal in mdf_file:
+  for signal in signals:
     f = len(signal.timestamps) / (signal.timestamps[-1] - signal.timestamps[0])
     sf[signal.name[5:]] = f
     print('%s: %.2f Hz' % (signal.name, f))
@@ -201,8 +201,8 @@ def signal_frequences(input_path):
   plt.yticks(np.arange(0, max(sf.values()), 10))
   plt.ylabel('Frequency [Hz]')
   plt.xticks(range(len(sf)), list(sf.keys()), rotation='vertical')
-  
-  
+
+
 def plot_all_trips(trips):
   print('=====Plot all trips=====')
   plt.figure(1)
@@ -254,6 +254,6 @@ def main():
   #     i += 1
 
   signal_frequences(mf4_input_path)
-  plt.show()
+  # plt.show()
 if __name__ == "__main__":
   main()

@@ -10,9 +10,6 @@
 %
 %----------------------------------------------------------------
 
-% Please send any questions, comments, remarks or complaints to
-% manuel.koschuch@fh-campuswien.ac.at
-
 
 % --- General Setup ---------------------------------------------
 % !TEX encoding = IsoLatin2
@@ -20,9 +17,7 @@
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 
-% select correct document language here
-%\usepackage[ngerman]{babel}
-\usepackage[english]{babel}
+\usepackage[ngerman]{babel}
 
 % for nicer PDF rendering. Alternatively, when using MikTeX,
 % you could also manually install the cm-super package
@@ -33,7 +28,6 @@
 % want Arial? uncomment next two lines...
 %\usepackage{uarial}
 %\renewcommand{\familydefault}{\sfdefault}
-
 
 \usepackage[bf,sf]{subfigure}
 \renewcommand{\subfigtopskip}{0mm}
@@ -48,6 +42,10 @@
 \usepackage{fancyhdr} % nicer headers and footers
 
 \usepackage{colortbl} % define colored backgrounds for tables
+
+\usepackage{makecell}
+
+\usepackage{multirow}
 
 \usepackage{courier} %for listings
 \usepackage{listings} % nicer code formatting
@@ -87,9 +85,7 @@
 \normalsize
 \pagestyle{empty}            % for title pages
 
-% include correct title, depending on language
 \include{title_de}
-%\include{title_en}
 
 \pagestyle{fancy}
 \fancyhead{}
@@ -119,10 +115,15 @@
 
 %--- Include your chapters here ----------
 
-\include{chapter1}          % Introduction
+\include{introduction}
 
-% \include{chapter2}          % Background
+\include{state_of_the_art}
 
+\include{implementation}
+
+\include{discussion}
+
+\include{conclusion}
 
 %% ....
 
@@ -133,4 +134,3 @@
 \include{appendix}		   % other appendices
 
 \end{document}
-
