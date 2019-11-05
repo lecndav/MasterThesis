@@ -89,18 +89,6 @@ def main():
                          required=False,
                          help='Trip count')
 
-  my_parser.add_argument('-s', '--shuffle',
-                         action='store_true',
-                         required=False,
-                         help='Shuffle either trips or all data')
-
-  my_parser.add_argument('--offset',
-                          action='store',
-                          metavar='offset',
-                          type=str,
-                          required=False,
-                          help='Offset for either trips (count) or duration (time [m])')
-
   my_parser.add_argument('-id', '--ids',
                          action='store',
                          metavar='ids',
@@ -116,8 +104,6 @@ def main():
   hdf_dir = args.output
   duration = None
   trip_count = None
-  shuffle = args.shuffle
-  offset = 0
   if args.duration:
     duration = int(args.duration)
   elif args.trips:
@@ -126,21 +112,12 @@ def main():
     print('Either sepcifiy duration or amount of trips')
     sys.exit(1)
 
-  if args.offset:
-    offset = args.offset
-
   if not os.path.isdir(mdf_input_path):
     print('The mdf input path specified is not a directory')
     sys.exit()
 
   files = order_files(mdf_input_path)
   trips = get_trips(files)
-
-  if shuffle:
-    for id in files:
-      random.shuffle(files[id])
-    for id in trips:
-      random.shuffle(trips[id])
 
   i = 0
   l = len(trips)
@@ -151,9 +128,11 @@ def main():
     if i == l:
       break
     if duration:
-      ts = files[id][offset:duration]
+      start_point = random.randrange(0, len(files[id]) - duration)
+      ts = files[id][start_point:duration]
     if trip_count:
-      ts = trips[id][offset:trip_count]
+      start_point = random.randrange(0, len(trips[id]) - trip_count)
+      ts = trips[id][start_point:trip_count]
       ts = [item for sublist in ts for item in sublist]
 
     to_hdf5(ts, id, mdf_input_path, hdf_dir)
