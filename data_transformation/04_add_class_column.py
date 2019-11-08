@@ -9,7 +9,7 @@ import numpy as np
 
 def main():
 
-  my_parser = argparse.ArgumentParser(description='Transform steering wheel.')
+  my_parser = argparse.ArgumentParser(description='Add class column with driver id.')
   my_parser.add_argument('-i', '--input',
                          action='store',
                          metavar='hdf5_input',
