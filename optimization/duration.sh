@@ -19,4 +19,6 @@ python3 data_transformation/02_window_size.py -i "${dir_name}/stage1" -o "${dir_
 python3 data_transformation/03_clean_data.py -i "${dir_name}/stage2" -o "${dir_name}/stage3"
 python3 data_transformation/04_add_class_column.py -i "${dir_name}/stage3" -o "${dir_name}/stage4"
 echo "Let the magician do his magic."
-python optimization/duration.py -i "${dir_name}/stage4"  -r ../results  -s $window_size
+python optimization/duration.py -i "${dir_name}/stage4"  -r results  -s $window_size
+
+rm -r ${dir_name}

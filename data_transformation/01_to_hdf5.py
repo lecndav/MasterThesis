@@ -6,7 +6,8 @@ import os
 import sys
 from datetime import datetime
 from asammdf import MDF
-from ..lib.helper import get_trips, order_files
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'lib'))
+from helper import get_trips, order_files
 
 
 def to_hdf5(ts, id, mf4_dir, hdf_dir):
@@ -92,7 +93,10 @@ def main():
       break
     if duration:
       start_point = random.randrange(0, len(files[id]) - duration)
-      ts = files[id][start_point:duration]
+      temp = files[id]
+      # temp = temp[start_point:]
+      temp = temp[:duration]
+      ts = temp
     if trip_count:
       start_point = random.randrange(0, len(trips[id]) - trip_count)
       ts = trips[id][start_point:trip_count]

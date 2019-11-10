@@ -11,10 +11,10 @@ from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
 
-# n_estimators = [500, 800, 1000, 1200, 1400, 1600, 1800, 2000]
-# max_depth = [10, 15, 25, 30, 40, 50, 60]
-# min_samples_leaf = [1, 2, 5, 10]
-# criterion = ['gini', 'entropy']
+n_estimators = [300, 350, 400, 450, 500, 550, 600, 650, 700, 750, 800, 1000, 1200, 1250, 1300, 1350, 1400, 1450, 1500, 1600, 1800, 2000]
+max_depth = [15]
+min_samples_leaf = [1]
+criterion = ['gini', 'entropy']
 # duration = [5, 8, 10, 12, 14, 16, 18, 20, 25, 30, 35]
 # window_size = [900, 1000, 1500, 1800, 2000, 2200, 2500, 2800, 3000]
 
@@ -68,11 +68,6 @@ def main():
 
   clf = RandomForestClassifier(n_estimators=1000, n_jobs=-1, random_state=1, min_samples_leaf=1)
 
-  n_estimators = [500, 800, 1000, 1200, 1400, 1600, 1800, 2000]
-  max_depth = [10, 15, 25, 30, 40, 50, 60]
-  min_samples_leaf = [1, 2, 5, 10]
-  criterion = ['gini', 'entropy']
-
   hyperF = dict(
     n_estimators = n_estimators,
     max_depth = max_depth,
@@ -80,20 +75,25 @@ def main():
     criterion = criterion
     )
 
-  gridF = GridSearchCV(clf, hyperF, cv=3, verbose=1, n_jobs=-1)
+  gridF = GridSearchCV(clf, hyperF, cv=3, verbose=3, n_jobs=-1)
   bestF = gridF.fit(X_train, y_train)
 
   y_pred = bestF.predict(X_test)
   print(bestF.score(X_train, y_train))
   print(gridF.best_params_)
   print("Accuracy:" , metrics.accuracy_score(y_test, y_pred))
-  
-  csv_columns = bestF.cv_results_.keys()
+
+  csv_columns = list(gridF.best_params_.keys()) + ['time', 'accuracy']
   csv_file = os.path.join(results_dir, 'random_forest_params.csv')
+  means = bestF.cv_results_['mean_test_score']
+  time = bestF.cv_results_['mean_fit_time']
+
   with open(csv_file, 'w') as csvfile:
     writer = csv.DictWriter(csvfile, csv_columns)
     writer.writeheader()
-    writer.writerows(bestF.cv_results_)
+    for mean, t, params in zip(means, time, bestF.cv_results_['params']):
+      params.update({'time': t, 'accuracy': mean})
+      writer.writerow(params)
 
 
 main()

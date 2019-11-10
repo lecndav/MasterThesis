@@ -50,7 +50,7 @@ def main():
     print('The hdf5 input path specified is not a directory')
     sys.exit()
 
-  results = dict()
+  results = list()
   for d in duration:
     i = 0
     for file in os.listdir(hdf5_input):
@@ -78,7 +78,7 @@ def main():
     y_pred = clf.predict(X_test)
 
     accuracy = metrics.accuracy_score(y_test, y_pred)
-    results[d] = accuracy
+    results.append({'duration': d, 'accuracy': accuracy})
 
   csv_columns = ['duration', 'accuracy']
   csv_file = os.path.join(results_dir, 'duration.csv')
