@@ -94,7 +94,7 @@ def main():
     if duration:
       start_point = random.randrange(0, len(files[id]) - duration)
       temp = files[id]
-      # temp = temp[start_point:]
+      temp = temp[start_point:]
       temp = temp[:duration]
       ts = temp
     if trip_count:
