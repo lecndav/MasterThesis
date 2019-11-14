@@ -11,11 +11,12 @@ from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
 
-n_estimators = [300, 400, 500, 600, 650, 700, 800,
-                1000, 1200, 1300, 1350, 1400, 1500, 1600, 1800, 2000]
-max_depth = [5, 7, 9, 10, 12, 13, 15, 17, 18]
-min_samples_leaf = [1, 3, 4, 5, 6]
-criterion = ['gini', 'entropy']
+n_estimators = [100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750, 800]
+max_depth = [12, 13, 14, 15, 16, 17, 18, 18]
+min_samples_leaf = [1]
+# min_samples_leaf = [1, 3, 4, 5, 6]
+criterion = ['gini']
+# criterion = ['gini', 'entropy']
 # duration = [5, 8, 10, 12, 14, 16, 18, 20, 25, 30, 35]
 # window_size = [900, 1000, 1500, 1800, 2000, 2200, 2500, 2800, 3000]
 
@@ -76,7 +77,7 @@ def main():
     criterion = criterion
     )
 
-  gridF = GridSearchCV(clf, hyperF, cv=3, verbose=1, n_jobs=-1, return_train_score=True)
+  gridF = GridSearchCV(clf, hyperF, cv=10, verbose=1, n_jobs=-1, return_train_score=True)
   gridF.fit(X_train, y_train)
 
   csv_columns = list(gridF.best_params_.keys()) + ['time', 'accuracy']
