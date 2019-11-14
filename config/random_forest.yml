@@ -1,0 +1,4 @@
+criterion: gini
+max_depth: 17
+n_estimators: 300
+test_size: 0.3

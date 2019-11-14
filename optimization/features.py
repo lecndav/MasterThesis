@@ -35,13 +35,13 @@ def main():
 
   hdf5_input = args.input
   config_file = args.config
-
+  
   config = dict()
   with open(config_file, 'r') as stream:
     try:
-        config = yaml.safe_load(stream)
+      config = yaml.safe_load(stream)
     except yaml.YAMLError as exc:
-        print(exc)
+      print(exc)
 
   frames = []
   if not os.path.isdir(hdf5_input):
@@ -68,12 +68,10 @@ def main():
   clf.fit(X_train, y_train)
   y_pred = clf.predict(X_test)
 
-  print("Accuracy:" , metrics.accuracy_score(y_test, y_pred))
-  print('Mean Absolute Error:', metrics.mean_absolute_error(y_test, y_pred))
-  print('Mean Squared Error:', metrics.mean_squared_error(y_test, y_pred))
-  print('Root Mean Squared Error:', np.sqrt(metrics.mean_squared_error(y_test, y_pred)))
-
   fti = clf.feature_importances_
+
+  csv_columns = ['accuracy', 'n_estimators', 'max_depth'] + columns
+
   for i, feat in enumerate(columns):
     print('{0:20s} : {1:>.6f}'.format(feat, fti[i]))
 

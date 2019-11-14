@@ -25,9 +25,9 @@ Exec: `python3 optimization/random_forest_params.py -i ... -o resultate/random_f
 Resultate mit `python3 data_analysis/random_forest_params.py -i resultate/random_forest_params`
 
 * Best Criterion is `gini`
-* best `min_samples_leaf` is `1`
-* best `n_estimators` are `600,50,1000`
-* best `max_depth` are `15`, `17`
+* Best `min_samples_leaf` is `1`
+* Best `n_estimators` are `600,50,1000`
+* Best `max_depth` are `15`, `17`
 
 Accuracy zwischen 87 und 89
 
@@ -41,3 +41,6 @@ max_depth = 15,17
 Exec: `python3 optimization/random_forest_params_detailed.py -i ... -o resultate/random_forest_params`
 
 Resultate mit `python3 data_analysis/random_forest_params_detailed.py -i resultate/random_forest_params_detailed`
+
+* Best `max_depth` is `17`
+* Best `n_estimator` is `600`
