@@ -11,10 +11,10 @@ from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
 
-n_estimators = [100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750, 800]
+n_estimators = [200, 250, 300, 350, 400]
 max_depth = [12, 13, 14, 15, 16, 17, 18, 18]
-min_samples_leaf = [1]
-# min_samples_leaf = [1, 3, 4, 5, 6]
+# min_samples_leaf = [1]
+min_samples_leaf = [1, 2, 3, 4, 5, 6]
 criterion = ['gini']
 # criterion = ['gini', 'entropy']
 # duration = [5, 8, 10, 12, 14, 16, 18, 20, 25, 30, 35]

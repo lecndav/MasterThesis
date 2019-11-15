@@ -22,7 +22,6 @@ def main():
                          required=True,
                          help='Input directory with source hdf5 files')
 
-  my_parser = argparse.ArgumentParser(description='Magic random forest classifier')
   my_parser.add_argument('-c', '--config',
                          action='store',
                          metavar='config',
