@@ -31,13 +31,13 @@ def main():
     data = data.append(t)
 
 
-  data = data.sort_values(['accuracy'], ascending=False)
-  data = data.iloc[0:500]
+  data = data.sort_values(['accuracy'], ascending=True)
+  data = data.iloc[0:200]
   data['criterion'].replace('gini',1,inplace=True)
   data['criterion'].replace('entropy',2,inplace=True)
-  # data = data[data['criterion'] == 1]
+  data = data[data['criterion'] == 1]
 
-  param_names = ['criterion', 'n_estimators', 'max_depth']
+  param_names = ['min_samples_leaf', 'n_estimators', 'max_depth']
 
   for name in param_names:
     values = data[name].unique()
@@ -65,12 +65,12 @@ def main():
     data.plot(kind='scatter',x='max_depth',y='accuracy',color=data['color'],ax=p2)
 
     p3 = plt.subplot(223)
-    criterion_value_count = data['criterion'].value_counts()
+    criterion_value_count = data['min_samples_leaf'].value_counts()
     for val, count in criterion_value_count.items():
-      y = data[data['criterion'] == val].iloc[0].accuracy
+      y = data[data['min_samples_leaf'] == val].iloc[0].accuracy
       p3.annotate(str(count), (val, y))
-    plt.title('Criterion')
-    data.plot(kind='scatter',x='criterion',y='accuracy',color=data['color'],ax=p3)
+    plt.title('min_samples_leaf')
+    data.plot(kind='scatter',x='min_samples_leaf',y='accuracy',color=data['color'],ax=p3)
 
     p4 = plt.subplot(224)
     plt.title('Time')

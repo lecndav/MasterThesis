@@ -63,7 +63,7 @@ def main():
   X = np.nan_to_num(X)
   X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=config['test_size'])
 
-  clf = RandomForestClassifier(n_estimators=config['n_estimators'], n_jobs=-1, random_state=1, min_samples_leaf=1, criterion=config['criterion'], max_depth=config['max_depth'])
+  clf = RandomForestClassifier(n_estimators=config['n_estimators'], n_jobs=-1, random_state=1, min_samples_leaf=config['min_samples_leaf'], criterion=config['criterion'], max_depth=config['max_depth'])
   clf.fit(X_train, y_train)
   y_pred = clf.predict(X_test)
 
