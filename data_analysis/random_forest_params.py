@@ -31,13 +31,13 @@ def main():
     data = data.append(t)
 
 
-  data = data.sort_values(['accuracy'], ascending=True)
-  data = data.iloc[0:200]
+  data = data.sort_values(['accuracy'], ascending=False)
+  # data = data.iloc[0:200]
   data['criterion'].replace('gini',1,inplace=True)
   data['criterion'].replace('entropy',2,inplace=True)
-  data = data[data['criterion'] == 1]
+  # data = data[data['criterion'] == 1]
 
-  param_names = ['min_samples_leaf', 'n_estimators', 'max_depth']
+  param_names = ['criterion', 'min_samples_leaf', 'n_estimators', 'max_depth']
 
   for name in param_names:
     values = data[name].unique()
@@ -48,7 +48,7 @@ def main():
     data['color'] = data[name].apply(lambda x: colors[x])
 
     plt.figure(num=name)
-    p1 = plt.subplot(221)
+    p1 = plt.subplot(321)
     est_value_count = data['n_estimators'].value_counts()
     for val, count in est_value_count.items():
       y = data[data['n_estimators'] == val].iloc[0].accuracy
@@ -56,7 +56,7 @@ def main():
     plt.title('Estimators')
     data.plot(kind='scatter',x='n_estimators',y='accuracy',color=data['color'], ax=p1)
 
-    p2 = plt.subplot(222)
+    p2 = plt.subplot(322)
     max_d_value_count = data['max_depth'].value_counts()
     for val, count in max_d_value_count.items():
       y = data[data['max_depth'] == val].iloc[0].accuracy
@@ -64,18 +64,26 @@ def main():
     plt.title('Max depth')
     data.plot(kind='scatter',x='max_depth',y='accuracy',color=data['color'],ax=p2)
 
-    p3 = plt.subplot(223)
-    criterion_value_count = data['min_samples_leaf'].value_counts()
-    for val, count in criterion_value_count.items():
+    p3 = plt.subplot(323)
+    msl_value_count = data['min_samples_leaf'].value_counts()
+    for val, count in msl_value_count.items():
       y = data[data['min_samples_leaf'] == val].iloc[0].accuracy
       p3.annotate(str(count), (val, y))
     plt.title('min_samples_leaf')
     data.plot(kind='scatter',x='min_samples_leaf',y='accuracy',color=data['color'],ax=p3)
 
-    p4 = plt.subplot(224)
+    p4 = plt.subplot(324)
+    criterion_value_count = data['criterion'].value_counts()
+    for val, count in criterion_value_count.items():
+      y = data[data['criterion'] == val].iloc[0].accuracy
+      p3.annotate(str(count), (val, y))
+    plt.title('criterion')
+    data.plot(kind='scatter',x='criterion',y='accuracy',color=data['color'],ax=p4)
+
+    p5 = plt.subplot(325)
     plt.title('Time')
-    data.plot(kind='scatter',x='time',y='accuracy',color=data['color'],ax=p4)
-  
+    data.plot(kind='scatter',x='time',y='accuracy',color=data['color'],ax=p5)
+
   plt.show()
 
 
