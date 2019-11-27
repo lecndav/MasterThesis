@@ -6,6 +6,7 @@ import sys
 import h5py
 import yaml
 import numpy as np
+import csv
 from sklearn.utils import shuffle
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
@@ -22,7 +23,6 @@ def main():
                          required=True,
                          help='Input directory with source hdf5 files')
 
-  my_parser = argparse.ArgumentParser(description='Magic random forest classifier')
   my_parser.add_argument('-c', '--config',
                          action='store',
                          metavar='config',
@@ -30,18 +30,26 @@ def main():
                          required=True,
                          help='Config file for rf parameter')
 
+  my_parser.add_argument('-r', '--results-dir',
+                         action='store',
+                         metavar='results_dir',
+                         type=str,
+                         required=True,
+                         help='Directory for results file')
+
   # Execute the parse_args() method
   args = my_parser.parse_args()
 
   hdf5_input = args.input
   config_file = args.config
-  
+  results_dir = args.results_dir
+
   config = dict()
   with open(config_file, 'r') as stream:
     try:
-      config = yaml.safe_load(stream)
+        config = yaml.safe_load(stream)
     except yaml.YAMLError as exc:
-      print(exc)
+        print(exc)
 
   frames = []
   if not os.path.isdir(hdf5_input):
@@ -62,18 +70,26 @@ def main():
   X = result[columns]
   Y = result['class']
   X = np.nan_to_num(X)
-  X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=config['test_size'])
 
-  clf = RandomForestClassifier(n_estimators=config['n_estimators'], n_jobs=-1, random_state=1, min_samples_leaf=1, criterion=config['criterion'], max_depth=config['max_depth'])
-  clf.fit(X_train, y_train)
-  y_pred = clf.predict(X_test)
+  csv_columns = ['accuracy']
+  c = len(os.listdir(results_dir))
+  csv_file = os.path.join(
+      results_dir, 'test_rf_params_%d.csv' % c)
+  csvfile = open(csv_file, 'w')
+  writer = csv.DictWriter(csvfile, csv_columns)
+  writer.writeheader()
 
-  fti = clf.feature_importances_
+  for i in range(0, 100):
+    X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=config['test_size'])
+    clf = RandomForestClassifier(n_estimators=config['n_estimators'], n_jobs=-1, random_state=1,
+                                min_samples_leaf=config['min_samples_leaf'], criterion=config['criterion'], max_depth=config['max_depth'])
+    clf.fit(X_train, y_train)
+    y_pred = clf.predict(X_test)
 
-  csv_columns = ['accuracy', 'n_estimators', 'max_depth'] + columns
+    accuracy = metrics.accuracy_score(y_test, y_pred)
+    writer.writerow({'accuracy': accuracy})
 
-  for i, feat in enumerate(columns):
-    print('{0:20s} : {1:>.6f}'.format(feat, fti[i]))
+  csvfile.close()
 
 
 main()
