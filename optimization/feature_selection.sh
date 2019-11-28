@@ -21,7 +21,7 @@ python3 data_transformation/02_window_size.py -i "${dir_name}/stage1" -o "${dir_
 python3 data_transformation/03_clean_data.py -i "${dir_name}/stage2" -o "${dir_name}/stage3"
 python3 data_transformation/04_add_class_column.py -i "${dir_name}/stage3" -o "${dir_name}/stage4"
 echo "Let the magician do his magic."
-python optimization/feature_selection.py -i "${dir_name}/stage4" -r results/feature_selection -c config/random_forest.yml
+python optimization/feature_selection.py -i "${dir_name}/stage4" -c config/random_forest.yml -r results/feature_selection
 
 if [[ "$delete" -eq "1" ]];
 then
