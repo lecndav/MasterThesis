@@ -56,9 +56,8 @@ def main():
 
   result = pd.concat(frames, sort=False)
   result = shuffle(result)
-  columns = list(result.head())
-  columns.remove('class')
-  X = result[columns]
+  features = config['features'][:config['feature_count']]
+  X = result[features]
   Y = result['class']
   X = np.nan_to_num(X)
   X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=config['test_size'])
@@ -73,7 +72,7 @@ def main():
   print('Root Mean Squared Error:', np.sqrt(metrics.mean_squared_error(y_test, y_pred)))
 
   fti = clf.feature_importances_
-  for i, feat in enumerate(columns):
+  for i, feat in enumerate(features):
     print('{0:20s} : {1:>.6f}'.format(feat, fti[i]))
 
 
