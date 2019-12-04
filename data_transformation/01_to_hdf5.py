@@ -97,10 +97,12 @@ def main():
       temp = temp[start_point:]
       temp = temp[:duration]
       ts = temp
-    if trip_count:
+    elif trip_count:
       start_point = random.randrange(0, len(trips[id]) - trip_count)
       ts = trips[id][start_point:trip_count]
       ts = [item for sublist in ts for item in sublist]
+    else:
+      ts = files[id]
 
     to_hdf5(ts, id, mdf_input_path, hdf_dir)
 

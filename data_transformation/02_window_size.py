@@ -85,7 +85,6 @@ def main():
 
     data = pd.concat([data_mean, data_max, data_median, data_min, data_std], axis=1, sort=False)
     data.dropna(inplace=True)
-    data.reset_index(drop=True, inplace=True)
 
     data.to_hdf(os.path.join(hdf5_output, file), file.split('.')[0])
 

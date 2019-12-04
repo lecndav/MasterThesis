@@ -7,9 +7,10 @@ import h5py
 import yaml
 import numpy as np
 from sklearn.utils import shuffle
-from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'lib'))
+from helper import train_test_split
 
 
 def main():
@@ -55,25 +56,9 @@ def main():
     frames.append(data)
 
   result = pd.concat(frames, sort=False)
-  result = shuffle(result)
-  features = config['features'][:config['feature_count']]
-  X = result[features]
-  Y = result['class']
-  X = np.nan_to_num(X)
-  X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=config['test_size'])
-
-  clf = RandomForestClassifier(n_estimators=config['n_estimators'], n_jobs=-1, random_state=1, min_samples_leaf=config['min_samples_leaf'], criterion=config['criterion'], max_depth=config['max_depth'])
-  clf.fit(X_train, y_train)
-  y_pred = clf.predict(X_test)
-
-  print("Accuracy:" , metrics.accuracy_score(y_test, y_pred))
-  print('Mean Absolute Error:', metrics.mean_absolute_error(y_test, y_pred))
-  print('Mean Squared Error:', metrics.mean_squared_error(y_test, y_pred))
-  print('Root Mean Squared Error:', np.sqrt(metrics.mean_squared_error(y_test, y_pred)))
-
-  fti = clf.feature_importances_
-  for i, feat in enumerate(features):
-    print('{0:20s} : {1:>.6f}'.format(feat, fti[i]))
+  features = config['features'][:config['feature_count']] + ['class']
+  data = result[features]
+  X_train, X_test, y_train, y_test = train_test_split(data, config['test_size'])
 
 
 main()
