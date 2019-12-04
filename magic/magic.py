@@ -6,6 +6,7 @@ import sys
 import h5py
 import yaml
 import numpy as np
+from datetime import datetime
 from sklearn.utils import shuffle
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
@@ -56,9 +57,11 @@ def main():
     frames.append(data)
 
   result = pd.concat(frames, sort=False)
-  features = config['features'][:config['feature_count']] + ['class']
+  feature_count = config['feature_count']
+  features = config['features'][:feature_count] + ['class']
   data = result[features]
-  X_train, X_test, y_train, y_test = train_test_split(data, config['test_size'])
+  # X_train, X_test, y_train, y_test = train_test_split(data, config['test_size'])
+  train_test_split(data, config['test_size'])
 
 
 main()

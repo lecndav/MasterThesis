@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 from random import randint
+from datetime import timedelta, datetime
 
 def order_files(input_path):
   driver = dict()
@@ -42,30 +43,40 @@ def get_trips(driver):
 
 def train_test_split(data, test_size):
   columns = data.columns
+  features = list(columns)
+  features.remove('class')
+  x = data[features]
+  y = data['class']
+  y = y.to_frame()
+  print(y)
+  X_train = pd.DataFrame(columns=x.columns)
+  X_test = pd.DataFrame(columns=x.columns)
+  Y_train = pd.DataFrame(columns=['class'])
+  Y_test = pd.DataFrame(columns=['class'])
   ids = data['class'].unique()
   for id in ids:
+    print('ID:', id)
     rows = data.loc[data['class'] == id]
     rows = rows.loc[rows['can0_ESP_v_Signal_min'] < 1]
     rows = rows['can0_ESP_v_Signal_min']
-    first_rows = list()
-    first_val = rows.iloc[0]
+    trips_start = list()
     first_time = rows.iloc[[0]].index[0]
-    first_rows.append((first_time, first_val))
-    last_first = first_time
+    trips_start.append(first_time)
+    last_time = first_time
     for row in rows.iteritems():
-      diff = row[0] - last_first
+      diff = row[0] - last_time
       diff = diff.total_seconds()
-      if diff > 10 * 60:
-        first_rows.append((row[0], row[1]))
-        last_first = row[0]
-    
-
-
-  # features = list(columns)
-  # features.remove('class')
-  # x = data[features]
-  # y = data['class']
-  # X_train = pd.DataFrame(columns=x.columns)
-  # X_test = pd.DataFrame(columns=x.columns)
-  # y_train = pd.DataFrame(columns=['class'])
-  # y_test = pd.DataFrame(columns=['class'])
+      if diff > 20 * 60:
+        trips_start.append(row[0])
+        last_time = row[0]
+    r = randint(0, len(trips_start)-2)
+    start_test_data = trips_start[r]
+    end_test_data = start_test_data + timedelta(seconds=test_size)
+    start_test_data = start_test_data.strftime("%Y-%m-%d %H:%M:%S")
+    end_test_data = end_test_data.strftime("%Y-%m-%d %H:%M:%S")
+    xtmp = x.loc[start_test_data:end_test_data]
+    X_test = X_test.append(xtmp)
+    ytmp = y.loc[start_test_data:end_test_data]
+    Y_test = Y_test.append(ytmp)
+    print(Y_test)
+    break

@@ -1,7 +1,7 @@
 criterion: gini
 max_depth: 13
 n_estimators: 300
-test_size: 0.3
+test_size: 300
 min_samples_leaf: 1
 feature_count: 30
 features:
