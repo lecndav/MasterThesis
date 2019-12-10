@@ -43,21 +43,20 @@ def get_trips(driver):
   return trips
 
 
-def train_test_split(data, test_size):
+def train_test_split_trip_start(data, test_size):
   columns = data.columns
   features = list(columns)
   features.remove('class')
-  x = data[features]
-  y = data['class']
-  y = y.to_frame()
-  X_train = pd.DataFrame(columns=x.columns)
-  X_test = pd.DataFrame(columns=x.columns)
+  X_train = pd.DataFrame(columns=features)
+  X_test = pd.DataFrame(columns=features)
   Y_train = pd.DataFrame(columns=['class'])
   Y_test = pd.DataFrame(columns=['class'])
   ids = data['class'].unique()
   for id in ids:
-    rows = data.loc[data['class'] == id]
-    rows = rows.loc[rows['can0_ESP_v_Signal_min'] < 1]
+    x_id = data.loc[data['class'] == id]
+    y_id = x_id['class'].to_frame()
+    x_id = x_id[features]
+    rows = x_id.loc[x_id['can0_ESP_v_Signal_min'] < 1]
     rows = rows['can0_ESP_v_Signal_min']
     trips_start = list()
     first_time = rows.iloc[[0]].index[0]
@@ -69,29 +68,33 @@ def train_test_split(data, test_size):
       if diff > 20 * 60:
         trips_start.append(row[0])
         last_time = row[0]
+
     r = randint(0, len(trips_start)-2)
-    start_test_data = trips_start[0]
+    start_test_data = trips_start[r]
     end_test_data = start_test_data + timedelta(seconds=test_size)
     start_test_data = start_test_data.strftime("%Y-%m-%d %H:%M:%S")
     end_test_data = end_test_data.strftime("%Y-%m-%d %H:%M:%S")
-    xtmp = x.loc[start_test_data:end_test_data]
-    ytmp = y.loc[start_test_data:end_test_data]
+    xtmp = x_id.loc[start_test_data:end_test_data]
+    ytmp = y_id.loc[start_test_data:end_test_data]
     X_test = X_test.append(xtmp)
     Y_test = Y_test.append(ytmp)
+    del trips_start[r]
 
-    plt.figure()
-    xtmp['can0_ESP_v_Signal_mean'].plot()
+    for trip_start in trips_start:
+      end = trip_start + timedelta(seconds=test_size)
+      start = trip_start.strftime("%Y-%m-%d %H:%M:%S")
+      end = end.strftime("%Y-%m-%d %H:%M:%S")
+      if end not in x_id.index:
+        end = x_id.index[-1]
 
-  xtest_i = list(X_test.iloc[:].index)
-  ytest_i = list(Y_test.iloc[:].index)
-  X_train = x.drop(xtest_i)
-  Y_train = y.drop(ytest_i)
-  # X_test.reset_index(drop=True, inplace=True)
-  # X_train.reset_index(drop=True, inplace=True)
-  # X_train = X_train.sample(frac=1)
-  # Y_train = Y_train.sample(frac=1)
-  # X_test = X_test.sample(frac=1)
-  # Y_test = Y_test.sample(frac=1)
+      xtmp = x_id.loc[start:end]
+      ytmp = y_id.loc[start:end]
+      X_train = X_train.append(xtmp)
+      Y_train = Y_train.append(ytmp)
+
+  X_test.reset_index(drop=True, inplace=True)
+  X_train.reset_index(drop=True, inplace=True)
+
 
   X_train = X_train.values
   X_test = X_test.values
@@ -102,7 +105,5 @@ def train_test_split(data, test_size):
 
   X_train = np.nan_to_num(X_train)
   X_test = np.nan_to_num(X_test)
-
-  plt.show()
 
   return X_train, X_test, Y_train, Y_test
