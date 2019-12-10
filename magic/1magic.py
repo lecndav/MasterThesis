@@ -6,13 +6,10 @@ import sys
 import h5py
 import yaml
 import numpy as np
-from datetime import datetime
 from sklearn.utils import shuffle
+from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
-import matplotlib.pyplot as plt
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'lib'))
-from helper import train_test_split
 
 
 def main():
@@ -58,18 +55,19 @@ def main():
     frames.append(data)
 
   result = pd.concat(frames, sort=False)
-  feature_count = config['feature_count']
-  features = config['features'][:feature_count] + ['class']
-  data = result[features]
-  X_train, X_test, Y_train, Y_test = train_test_split(data, config['test_size'])
+  result = shuffle(result)
+  features = config['features'][:config['feature_count']]
+  X = result[features]
+  Y = result['class']
+  X = np.nan_to_num(X)
+  print(type(X))
+  X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.3)
 
-  clf = RandomForestClassifier(n_estimators=config['n_estimators'], n_jobs=-1, random_state=1,
-                                min_samples_leaf=config['min_samples_leaf'], criterion=config['criterion'], max_depth=config['max_depth'])
-  clf.fit(X_train, Y_train)
-  Y_pred = clf.predict(X_test)
+  clf = RandomForestClassifier(n_estimators=config['n_estimators'], n_jobs=-1, random_state=1, min_samples_leaf=config['min_samples_leaf'], criterion=config['criterion'], max_depth=config['max_depth'])
+  clf.fit(X_train, y_train)
+  y_pred = clf.predict(X_test)
 
-  accuracy = metrics.accuracy_score(Y_test, Y_pred)
-  print('Accuracy', accuracy)
+  print("Accuracy:" , metrics.accuracy_score(y_test, y_pred))
 
 
 main()

@@ -1,5 +1,7 @@
 import os
 import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
 from random import randint
 from datetime import timedelta, datetime
 
@@ -48,14 +50,12 @@ def train_test_split(data, test_size):
   x = data[features]
   y = data['class']
   y = y.to_frame()
-  print(y)
   X_train = pd.DataFrame(columns=x.columns)
   X_test = pd.DataFrame(columns=x.columns)
   Y_train = pd.DataFrame(columns=['class'])
   Y_test = pd.DataFrame(columns=['class'])
   ids = data['class'].unique()
   for id in ids:
-    print('ID:', id)
     rows = data.loc[data['class'] == id]
     rows = rows.loc[rows['can0_ESP_v_Signal_min'] < 1]
     rows = rows['can0_ESP_v_Signal_min']
@@ -70,13 +70,39 @@ def train_test_split(data, test_size):
         trips_start.append(row[0])
         last_time = row[0]
     r = randint(0, len(trips_start)-2)
-    start_test_data = trips_start[r]
+    start_test_data = trips_start[0]
     end_test_data = start_test_data + timedelta(seconds=test_size)
     start_test_data = start_test_data.strftime("%Y-%m-%d %H:%M:%S")
     end_test_data = end_test_data.strftime("%Y-%m-%d %H:%M:%S")
     xtmp = x.loc[start_test_data:end_test_data]
-    X_test = X_test.append(xtmp)
     ytmp = y.loc[start_test_data:end_test_data]
+    X_test = X_test.append(xtmp)
     Y_test = Y_test.append(ytmp)
-    print(Y_test)
-    break
+
+    plt.figure()
+    xtmp['can0_ESP_v_Signal_mean'].plot()
+
+  xtest_i = list(X_test.iloc[:].index)
+  ytest_i = list(Y_test.iloc[:].index)
+  X_train = x.drop(xtest_i)
+  Y_train = y.drop(ytest_i)
+  # X_test.reset_index(drop=True, inplace=True)
+  # X_train.reset_index(drop=True, inplace=True)
+  # X_train = X_train.sample(frac=1)
+  # Y_train = Y_train.sample(frac=1)
+  # X_test = X_test.sample(frac=1)
+  # Y_test = Y_test.sample(frac=1)
+
+  X_train = X_train.values
+  X_test = X_test.values
+  Y_train = Y_train.squeeze()
+  Y_test = Y_test.squeeze()
+  Y_train = Y_train.astype(int)
+  Y_test = Y_test.astype(int)
+
+  X_train = np.nan_to_num(X_train)
+  X_test = np.nan_to_num(X_test)
+
+  plt.show()
+
+  return X_train, X_test, Y_train, Y_test
