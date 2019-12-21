@@ -25,13 +25,13 @@ def main():
   hdf5_input = args.hdf5
 
   if not os.path.isfile(hdf5_input):
-    print('The hdf5 input path specified is not a directory')
+    print('The hdf5 input path specified is not a file')
     sys.exit()
 
   data = pd.read_hdf(hdf5_input)
   data.dropna(inplace=True)
   data.reset_index(drop=True, inplace=True)
-  data['can0_ESP_v_Signal_max'].plot()
+  data['can0_ESP_v_Signal_mean'].plot()
   plt.show()
 
 

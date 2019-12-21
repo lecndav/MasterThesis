@@ -60,14 +60,12 @@ def main():
   X = result[features]
   Y = result['class']
   X = np.nan_to_num(X)
-  print(type(X))
   X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.3)
 
-  clf = RandomForestClassifier(n_estimators=config['n_estimators'], n_jobs=-1, random_state=1, min_samples_leaf=config['min_samples_leaf'], criterion=config['criterion'], max_depth=config['max_depth'])
+  clf = RandomForestClassifier(n_estimators=config['n_estimators'], n_jobs=-1, random_state=1, min_samples_leaf=config['min_samples_leaf'], criterion=config['criterion'], max_depth=None)
   clf.fit(X_train, y_train)
   y_pred = clf.predict(X_test)
 
   print("Accuracy:" , metrics.accuracy_score(y_test, y_pred))
-
 
 main()

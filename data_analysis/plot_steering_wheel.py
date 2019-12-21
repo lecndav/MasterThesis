@@ -31,14 +31,7 @@ def main():
     sys.exit()
 
   data = pd.read_hdf(hdf5_input)
-  test = data.loc['2019-07-13 10:54:58':'2019-07-13 11:01:00']
-  vz = test['can0_LWI_VZ_Lenkradwinkel']
-  vz = vz.apply(lambda x: -1 if x is 0 else x)
-  fig, ax1 = plt.subplots()
-  ax1.plot(test['can0_LWI_Lenkradwinkel'])
-  ax2 = ax1.twinx()
-  ax2.plot(vz, color='red')
-  ax2.set_ylim(-5,5)
+  data['can0_LWI_Lenkradwinkel_mean'].plot()
   plt.show()
 
 main()
