@@ -10,27 +10,28 @@ from datetime import datetime
 from sklearn.utils import shuffle
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
+from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'lib'))
-from helper import train_test_split
+from helper import train_test_split_bremsdruck, train_test_split_trip_start
 
 
 def main():
 
   my_parser = argparse.ArgumentParser(description='Magic random forest classifier')
   my_parser.add_argument('-i', '--input',
-                         action='store',
-                         metavar='hdf5_input',
-                         type=str,
-                         required=True,
-                         help='Input directory with source hdf5 files')
+                          action='store',
+                          metavar='hdf5_input',
+                          type=str,
+                          required=True,
+                          help='Input directory with source hdf5 files')
 
   my_parser.add_argument('-c', '--config',
-                         action='store',
-                         metavar='config',
-                         type=str,
-                         required=True,
-                         help='Config file for rf parameter')
+                          action='store',
+                          metavar='config',
+                          type=str,
+                          required=True,
+                          help='Config file for rf parameter')
 
   # Execute the parse_args() method
   args = my_parser.parse_args()
@@ -41,9 +42,9 @@ def main():
   config = dict()
   with open(config_file, 'r') as stream:
     try:
-        config = yaml.safe_load(stream)
+      config = yaml.safe_load(stream)
     except yaml.YAMLError as exc:
-        print(exc)
+      print(exc)
 
   frames = []
   if not os.path.isdir(hdf5_input):
@@ -57,14 +58,17 @@ def main():
     data = pd.read_hdf(os.path.join(hdf5_input, file))
     frames.append(data)
 
-  result = pd.concat(frames, sort=False)
-  feature_count = config['feature_count']
-  features = config['features'][:feature_count] + ['class']
-  data = result[features]
-  X_train, X_test, Y_train, Y_test = train_test_split(data, config['test_size'])
+  data = pd.concat(frames, sort=False)
+  data = shuffle(data)
+
+  feature_count = config['feature_count'][:config['feature_count']]
+  X = data[features]
+  Y = data['class']
+  X = np.nan_to_num(X)
+  X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.3)
 
   clf = RandomForestClassifier(n_estimators=config['n_estimators'], n_jobs=-1, random_state=1,
-                                min_samples_leaf=config['min_samples_leaf'], criterion=config['criterion'], max_depth=config['max_depth'])
+                                min_samples_leaf=config['min_samples_leaf'], criterion=config['criterion'], max_depth=None)
   clf.fit(X_train, Y_train)
   Y_pred = clf.predict(X_test)
 

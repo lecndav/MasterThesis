@@ -3,7 +3,7 @@ max_depth: 13
 n_estimators: 300
 test_size: 100
 min_samples_leaf: 1
-feature_count: 30
+feature_count: 70
 features:
   - can0_ESP_Bremsdruck_median
   - can0_ESP_Bremsdruck_mean

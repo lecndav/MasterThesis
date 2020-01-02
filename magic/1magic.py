@@ -6,6 +6,7 @@ import sys
 import h5py
 import yaml
 import numpy as np
+import matplotlib.pyplot as plt
 from sklearn.utils import shuffle
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
@@ -65,6 +66,10 @@ def main():
   clf = RandomForestClassifier(n_estimators=config['n_estimators'], n_jobs=-1, random_state=1, min_samples_leaf=config['min_samples_leaf'], criterion=config['criterion'], max_depth=None)
   clf.fit(X_train, y_train)
   y_pred = clf.predict(X_test)
+
+  # br = list(map(lambda x: x[9], X_test))
+  # plt.plot(range(0,len(br)), br)
+  # plt.show()
 
   print("Accuracy:" , metrics.accuracy_score(y_test, y_pred))
 
