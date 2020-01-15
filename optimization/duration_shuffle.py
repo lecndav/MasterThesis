@@ -7,6 +7,7 @@ import h5py
 import yaml
 import numpy as np
 import random
+import csv
 import matplotlib.pyplot as plt
 from sklearn.utils import shuffle
 from sklearn.model_selection import train_test_split
@@ -33,10 +34,19 @@ def main():
                          required=True,
                          help='Config file for rf parameter')
 
+
+  my_parser.add_argument('-r', '--results-dir',
+                         action='store',
+                         metavar='results_dir',
+                         type=str,
+                         required=True,
+                         help='Directory for results file')
+
   # Execute the parse_args() method
   args = my_parser.parse_args()
 
   hdf5_input = args.input
+  results_dir = args.results_dir
   config_file = args.config
 
   config = dict()
@@ -61,41 +71,38 @@ def main():
   data = pd.concat(frames, sort=False)
 
   trips = get_trips_from_hdf(data)
-  time = 10 * 30
 
-  frames = []
-  for d in trips:
-    tdata = data.loc[data['class'] == d]
+  csv_columns = ['duration', 'accuracy']
+  csv_file = os.path.join(results_dir, 'duration_shuffle.csv')
+  csvfile = open(csv_file, 'w')
+  writer = csv.DictWriter(csvfile, csv_columns)
+  writer.writeheader()
 
-    strip = random.randint(0, len(trips[d])-5)
-    etrip = strip
-    ttrip = strip
-    tmp_time = time
-    diff = time
-    while True:
-      if len(trips[d][ttrip]) < diff:
-        diff = diff - len(trips[d][ttrip])
-        ttrip += 1
-        continue
-      tmp_time = diff
-      etrip = ttrip
-      break
 
-    mask = (tdata.index > trips[d][strip][0]) & (tdata.index <= trips[d][etrip][tmp_time])
-    tmp = tdata.loc[mask]
-    frames.append(tmp)
+  durations = [5, 7, 8, 10, 12, 14, 16, 18, 20, 22, 25, 30, 35, 40]
 
-  tdata = pd.concat(frames, sort=False)
-  features = config['features'][:config['feature_count']]
-  X = tdata[features]
-  Y = tdata['class']
-  X = np.nan_to_num(X)
-  X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.3)
+  for duration in durations:
+    time = duration * 30
+    for i in range(0, 50):
+      frames = []
+      for d in trips:
+        tdata = data.loc[data['class'] == d]
+        tmp = shuffle(tdata)
+        tmp = tmp.iloc[0:time]
+        frames.append(tmp)
 
-  clf = RandomForestClassifier(n_estimators=config['n_estimators'], n_jobs=-1, random_state=1, min_samples_leaf=config['min_samples_leaf'], criterion=config['criterion'], max_depth=None)
-  clf.fit(X_train, y_train)
-  y_pred = clf.predict(X_test)
+      tdata = pd.concat(frames, sort=False)
+      features = config['features'][:config['feature_count']]
+      X = tdata[features]
+      Y = tdata['class']
+      X = np.nan_to_num(X)
+      X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.3)
 
-  acc = metrics.accuracy_score(y_test, y_pred)
+      clf = RandomForestClassifier(n_estimators=config['n_estimators'], n_jobs=-1, random_state=1, min_samples_leaf=config['min_samples_leaf'], criterion=config['criterion'], max_depth=None)
+      clf.fit(X_train, y_train)
+      y_pred = clf.predict(X_test)
+
+      acc = metrics.accuracy_score(y_test, y_pred)
+      writer.writerow({'duration': duration, 'accuracy': acc})
 
 main()
