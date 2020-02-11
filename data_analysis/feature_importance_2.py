@@ -7,11 +7,16 @@ import h5py
 import yaml
 import numpy as np
 import random
+import rfpimp
 import matplotlib.pyplot as plt
+from collections import defaultdict
 from sklearn.utils import shuffle
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
+# from sklearn.inspection import permutation_importance
 from sklearn import metrics
+from scipy.stats import spearmanr
+from scipy.cluster import hierarchy
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'lib'))
 from helper import get_trips_from_hdf, get_data_from_random_trips
 
@@ -67,7 +72,6 @@ def main():
   features = config['features'][:config['feature_count']]
   X = tdata[features]
   Y = tdata['class']
-  X = np.nan_to_num(X)
   X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.3)
 
   clf = RandomForestClassifier(n_estimators=config['n_estimators'], n_jobs=-1, random_state=1, min_samples_leaf=config['min_samples_leaf'], criterion=config['criterion'], max_depth=None)
@@ -76,5 +80,9 @@ def main():
 
   acc = metrics.accuracy_score(y_test, y_pred)
   print(acc)
+
+  imp = rfpimp.importances(clf, X_train, y_train.to_frame())
+  print(imp)
+
 
 main()

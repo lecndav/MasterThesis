@@ -65,6 +65,32 @@ def get_trips_from_hdf(data):
         tlast = t
   return trips
 
+def get_data_from_random_trips(trips, data, time):
+  frames = []
+  for d in trips:
+    tdata = data.loc[data['class'] == d]
+
+    strip = randint(0, len(trips[d])-5)
+    etrip = strip
+    ttrip = strip
+    tmp_time = time
+    diff = time
+    while True:
+      if len(trips[d][ttrip]) < diff:
+        diff = diff - len(trips[d][ttrip])
+        ttrip += 1
+        continue
+      tmp_time = diff
+      etrip = ttrip
+      break
+
+    mask = (tdata.index > trips[d][strip][0]) & (tdata.index <= trips[d][etrip][tmp_time])
+    tmp = tdata.loc[mask]
+    frames.append(tmp)
+
+  return pd.concat(frames, sort=False)
+
+
 def train_test_split_trip_start(data, test_size):
   train_time = 10 * 60
   test_time = 5 * 60
