@@ -4,16 +4,16 @@ n_estimators: 300
 test_size: 100
 min_samples_leaf: 1
 min_samples_split: 1
-feature_count: 70
+feature_count: 65
 features:
   - can0_ESP_Bremsdruck_median
   - can0_ESP_Bremsdruck_mean
   - can0_ESP_Bremsdruck_max
   - can0_ESP_Bremsdruck_min
-  - can0_MO_Gangposition_median
-  - can0_MO_Gangposition_mean
-  - can0_MO_Gangposition_max
-  - can0_MO_Gangposition_min
+  # - can0_MO_Gangposition_median
+  # - can0_MO_Gangposition_mean
+  # - can0_MO_Gangposition_max
+  # - can0_MO_Gangposition_min
   - can0_ESP_v_Signal_max
   - can0_ESP_v_Signal_median
   - can0_ESP_Bremsdruck_std
@@ -63,7 +63,7 @@ features:
   - can0_LWI_Lenkradw_Geschw_median
   - can0_MO_Kuppl_schalter_min
   - can0_MO_Kuppl_schalter_median
-  - can0_MO_Gangposition_std
+  # - can0_MO_Gangposition_std
   - can0_MO_Kuppl_schalter_max
   - can0_ESP_HR_Fahrtrichtung_mean
   - can0_ESP_HL_Fahrtrichtung_mean
