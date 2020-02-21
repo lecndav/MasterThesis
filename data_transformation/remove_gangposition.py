@@ -9,7 +9,7 @@ import numpy as np
 gangpos = [
     'can0_MO_Gangposition_std', 'can0_MO_Gangposition_median',
     'can0_MO_Gangposition_mean', 'can0_MO_Gangposition_max',
-    'can0_MO_Gangposition_max'
+    'can0_MO_Gangposition_min'
 ]
 
 
@@ -53,7 +53,7 @@ def main():
             continue
         print('process %s' % file)
         data = pd.read_hdf(os.path.join(hdf5_input, file))
-        data.drop(gangpos, axis=1)
+        data = data.drop(gangpos, axis=1)
         data.to_hdf(os.path.join(hdf5_output, file), file.split('.')[0])
 
 
