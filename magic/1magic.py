@@ -61,7 +61,7 @@ def main():
   data = pd.concat(frames, sort=False)
 
   trips = get_trips_from_hdf(data)
-  time = 15 * 30
+  time = 20 * 30
 
   tdata = get_data_from_random_trips(trips, data, time)
   features = config['features'][:config['feature_count']]
