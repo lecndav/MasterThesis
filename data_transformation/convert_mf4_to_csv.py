@@ -9,6 +9,7 @@ def convert_to_csv(file, ouput):
   file_name = os.path.split(file)[-1].split('.')[0]
   print('processing %s...' % file_name)
   with MDF(file) as mdf_file:
+    print(ouput + file_name)
     mdf_file.export('csv', ouput + file_name)
 
 def main():

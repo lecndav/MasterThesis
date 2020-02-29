@@ -29,9 +29,8 @@
 %\usepackage{uarial}
 %\renewcommand{\familydefault}{\sfdefault}
 
-\usepackage[bf,sf]{subfigure}
-\renewcommand{\subfigtopskip}{0mm}
-\renewcommand{\subfigcapmargin}{0mm}
+\usepackage{caption}
+\usepackage{subcaption}
 
 \usepackage{url}
 
@@ -47,7 +46,22 @@
 
 \usepackage{multirow}
 
-\usepackage{mathabx}
+\usepackage{siunitx}
+
+\usepackage{eurosym}
+
+\usepackage{longtable}
+
+
+\DeclareFontEncoding{LS1}{}{}
+\DeclareFontSubstitution{LS1}{stix}{m}{n}
+\DeclareRobustCommand{\diameter}{
+    \text{\usefont{LS1}{stixscr}{m}{n}\symbol{"60}}
+}
+
+\usepackage{amsmath}
+
+% \usepackage{tikzpagenodes}
 
 \usepackage{courier} %for listings
 \usepackage{listings} % nicer code formatting
@@ -66,6 +80,7 @@
     pagebackref,
     pdfview={Fit},
     pdfstartview={Fit},
+    hidelinks,
     pdfpagemode=UseOutlines,                 % open bookmarks in Acrobat
   ]{hyperref}
   \usepackage{bookmark}
@@ -121,7 +136,11 @@
 
 \include{state_of_the_art}
 
-\include{implementation}
+\include{set_up}
+
+\include{optimization}
+
+\include{integration}
 
 \include{discussion}
 

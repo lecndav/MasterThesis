@@ -3,11 +3,11 @@
 %  File    :  abstracts.tex
 %
 %  Authors :  David Lechner, FH Campus Wien, Austria
-% 
+%
 %  Created :  10 Oct 2019
-% 
+%
 %  Changed :  10 Oct 2019
-% 
+%
 %----------------------------------------------------------------
 
 
@@ -17,13 +17,13 @@
 \cleardoublepage
 
 {\Large\bfseries Kurzfassung\\}
-(Z.B. ``Diese Arbeit beschäftigt sich mit...'')
 
+Nicht nur durch die neuen Technologien Autonomes Fahren und \textit{Vehicle-to-Everything} (V2X) erzeugen Fahrzeuge Unmengen an Daten. Auch schon heute tauschen Steuergeräte über den CAN-Bus Messwerte und Befehle aus, welche für Kontroll- und Sicherheitsfunktionen genutzt werden. Typische Daten sind beispielsweise Lenkradwinkel, Bremsdruck, Motordrehzahl und Fahrpedalrohwert. Aus diesen Daten ist es möglich, viele Informationen zu gewinnen. Eine davon ist, den Lenker eines Fahrzeuges während der Fahrt nur durch das Fahrverhalten zu identifizieren. Sie basiert darauf, dass jede Person ein individuelles Fahrverhalten im Straßenverkehr hat, das sich in den Fahrzeugdaten widerspiegelt. Die vorliegende Masterarbeit stellt ein System vor, das diese Aufgabenstellung adressiert. Ein erstes Ziel ist das Validieren der bereits bestehenden Methoden mit den vorhandenen Testdaten. Dabei wird der \textit{Machine Learning} (ML) Algorithmus \textit{Random Forest} zur Klassifizierung von CAN-Nachrichten eingesetzt. Hier konnte ein Ergebnis von 85\% erzielt werden. Das bedeutet, dass von 180 Datenpunkten pro Fahrer 150 korrekt mit dem Algorithmus zugeordnet wurden. Ein weiteres Ziel ist, das ML-Modell durch geschickte Parametrisierung zu optimieren, was jedoch nur ein Prozent eingebracht hat. Im zweiten Teil der Arbeit wird dargelegt, wie das System in ein Fahrzeug integriert werden kann. Warum eine Architektur ohne \textit{Cloud} für diese Anwendung und hinsichtlich Privatsphäre besser ist und was unter \textit{Edge Computing} zu verstehen ist, wird ebenfalls erläutert. Die verschiedenen Softwarekomponenten geben einen Einblick, wie das System auf einem \textit{Embedded-Device} mit limitierten Ressourcen funktioniert. Des Weiteren werden mehrere Entscheidungsansätze besprochen, wann ein Fahrer als ausreichend identifiziert gilt. Im Zuge dessen wird auch evaluiert, wie lange dieser Prozess dauert. Aufbauend darauf werden Anwendungen diskutiert, die für das System infrage kommen. Vor allem eignen sich jene, welche die Information über die aktuell fahrende Person erst gegen Ende der Fahrt benötigen. Als Beispiel wird ein digitales Fahrtenbuch angeführt, das vollkommen ohne Interaktion des Benutzers auskommt.
 
 % --- English Abstract ----------------------------------------------------
 
 \cleardoublepage
 
 {\Large\bfseries Abstract\\}
-(E.g. ``This thesis deals with...'')
 
+Vehicles generate an enormous amount of data, not only due to the new technologies autonomous driving and Vehicle-to-Everything. It is common practice for the control units to exchange measured values and commands via the CAN-Bus, which are used for control as well as safety functions. Typical values include break pressure, steering wheel angel and engine speed. It is possible to gain a lot of information from these values. For example can a driver be identified only based on their driving behaviour. The idea behind this is that individuals have their own unique characteristics while handling different traffic situations. This master thesis introduces a system that aims at mastering this task. The first goal is to validate already existing methods with the test data at hand. In order to do that the machine learning (ML) algorithm Random Forest is used. It is able to classify CAN-messages and link them to the driver. The results showed a precision of 85\% that represents 150 out of 180 correctly assigned data points. Another goal of the thesis is to optimize the machine learning model with clever parameterization. However, this only resulted in a small improvement of 1 percent. The second part of the thesis deals with the integration of the system into a vehicle. Furthermore, it is explained why an architecture without cloud interaction is better with respect to privacy and what the term Edge Computing means in this context. The following section outlines the used software components and shows how the whole system works on an embedded device with limited resources. The subsequent part analyses several approaches that determine a driver with the given ML model outcomes. In the course of that the duration of the decision process is evaluated. Based on the results and insights, eligible applications are discussed. Especially those applications where the driver does not have to be identified until the end of the trip are suitable. One implementation of this is a digital driver logbook, that works without any human interaction.

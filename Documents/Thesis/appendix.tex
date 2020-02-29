@@ -3,18 +3,408 @@
 %  File    :  appendix.tex
 %
 %  Authors :  David Lechner, FH Campus Wien, Austria
-% 
+%
 %  Created :  10 Oct 2019
-% 
+%
 %  Changed :  10 Oct 2019
-% 
+%
 %----------------------------------------------------------------
 
 \chapter{Anhang/Ergänzende Information}
 \label{chap:app}
 
-EIGENER ANHANG
+Im Folgenden werden alle Signale, welche in den original Dateien enthalten sind, gelistet. Zudem ist der Source-Code von den Software-Komponenten (siehe \ref{sec:software_compontens}) abgebildet.
 
-(Hier können Schaltpläne, Programme usw. eingefügt werden.)
+\section{Signale}
 
+\begin{longtable}{@{\extracolsep{\fill}}|l|l|l|@{}}
+    \hline
+    Signalname & CAN-Bus & Beschreibung \\
+    \hline
+    ESP\_VR\_Fahrtrichtung & F-CAN & Fahrtrichtung \\
+    ESP\_HL\_Fahrtrichtung & F-CAN & Fahrtrichtung \\
+    ESP\_HR\_Fahrtrichtung & F-CAN & Fahrtrichtung \\
+    ESP\_VL\_Fahrtrichtung & F-CAN & Fahrtrichtung \\
+    AB\_Gurtschloss\_Reihe2\_MI & K-CAN & Gurtschloss hinten \\
+    AB\_Gurtschloss\_Reihe2\_BF & K-CAN & Gurtschloss hinten \\
+    AB\_Gurtschloss\_FA & K-CAN & Gurtschloss vorne \\
+    AB\_Gurtschloss\_BF & K-CAN & Gurtschloss vorne \\
+    AB\_Gurtschloss\_Reihe2\_FA & K-CAN & Gurtschloss hinten \\
+    BCM1\_Aussen\_Temp\_ungef & F-CAN & Außentemperatur \\
+    BH\_Lichthupe & F-CAN & Lichthupe aktiv \\
+    Wischer\_vorne\_aktiv & F-CAN & Wischer vorne aktiv \\
+    BH\_Fernlicht & F-CAN & Fernlicht aktiv \\
+    BH\_Blinker\_li & F-CAN & Blinker links aktiv \\
+    BH\_Blinker\_re & F-CAN & Blinker rechts aktiv \\
+    ESP\_v\_Signal & F-CAN & Geschwindigkeit \\
+    MO\_Drehzahl\_01 & F-CAN & Motordrehzahl \\
+    MO\_Gangposition & F-CAN & Gangposition \\
+    MO\_Kuppl\_schalter & F-CAN & Kupplung \\
+    ESP\_Bremsdruck & F-CAN & Bremsdruck \\
+    ESP\_Fahrer\_bremst & F-CAN & Fahrer bremst \\
+    ESP\_HL\_Radgeschw\_02 & F-CAN & Radgeschwindigkeit \\
+    ESP\_HR\_Radgeschw\_02 & F-CAN & Radgeschwindigkeit \\
+    ESP\_VL\_Radgeschw\_02 & F-CAN & Radgeschwindigkeit \\
+    ESP\_VR\_Radgeschw\_02 & F-CAN & Radgeschwindigkeit \\
+    FS\_Luftfeuchte\_rel & K-CAN & Luftfeuchtigkeit \\
+    ESP\_Laengsbeschl & F-CAN & Längsbeschleunigung \\
+    ESP\_Gierrate & F-CAN & Gierrate \\
+    ESP\_VZ\_Gierrate & F-CAN & Vorzeichen Gierrate \\
+    ESP\_Querbeschleunigung & F-CAN & Querbeschleunigung \\
+    KBI\_Tankfuellstand\_Prozent & F-CAN & Tankfüllstand \\
+    LWI\_Lenkradwinkel & F-CAN & Lenkradwinkel \\
+    LWI\_VZ\_Lenkradwinkel & F-CAN & Vorzeichen Lenkradwinkel \\
+    LWI\_VZ\_Lenkradw\_Geschw & F-CAN & Vorzeichen Lenkradwinkelgeschwindigkeit \\
+    LWI\_Lenkradw\_Geschw & F-CAN & Lenkradwinkelgeschwindigkeit \\
+    ND\_UTC & K-CAN & Zeit \\
+    MO\_Fahrpedalrohwert\_01 & F-CAN & Fahrpedalrohwert \\
+    LV\_Nebelschlusslicht\_Anzeige & K-CAN & Nebelschlusslicht aktiv \\
+    LV\_Tagfahrlicht\_Anzeige & K-CAN & Tagfahrlicht aktiv \\
+    LV\_Standlicht\_Anzeige & K-CAN & Standlicht aktiv \\
+    LV\_Abblendlicht\_Anzeige & K-CAN & Abblendlicht aktiv \\
+    LV\_Fernlicht\_Anzeige & K-CAN & Fernlicht aktiv \\
+    LV\_Nebellicht\_Anzeige & K-CAN & Nebellicht aktiv \\
+    KBI\_Aussen\_Temp\_gef & F-CAN & Außentemperatur \\
+    KBI\_Kilometerstand\_2 & F-CAN & Kilometerstand \\
+    \hline
+	\caption{Signalbeschreibung}
+	\label{tab:full_can_signals}
+\end{longtable}
+
+\section{Software Komponenten}
+
+\subsubsection{CAN-Logger}
+
+Da der \textit{CAN-Logger} zum größten Teil aus \textit{Bosch} interner Software besteht, wird dieser hier nicht angeführt.
+
+\subsubsection{Data-Preprocessor}
+
+\begin{lstlisting}[frame=lines, caption=Ausschnitt Fahreridentifikation, captionpos=b, label = lst:a_sw_dp, numbers=left, language=Python, showstringspaces=false, basicstyle=\footnotesize]
+import argparse
+import pandas as pd
+import numpy as np
+import random
+import os
+import sys
+import yaml
+import time
+from datetime import datetime
+from asammdf import MDF
+
+
+def filter_mdf(file, signals):
+    mdf_file = MDF(file)
+    # Lenkradwinkel
+    lenkradwinkel = mdf_file.get('can0_LWI_Lenkradwinkel')
+    samples = list(lenkradwinkel.samples)
+    vz_samples = list(mdf_file.get('can0_LWI_VZ_Lenkradwinkel').samples)
+    for i in range(0, len(samples)):
+        if not int(vz_samples[i]):
+            samples[i] = samples[i] * -1
+    lenkradwinkel.samples = np.asarray(samples)
+
+    # Lenkradwinkel geschw.
+    lenkrad_gesch = mdf_file.get('can0_LWI_Lenkradw_Geschw')
+    samples = list(lenkrad_gesch.samples)
+    vz_samples = list(mdf_file.get('can0_LWI_VZ_Lenkradw_Geschw').samples)
+    for i in range(0, len(samples)):
+        if not int(vz_samples[i]):
+            samples[i] = samples[i] * -1
+    lenkrad_gesch.samples = np.asarray(samples)
+
+    # Gierrate
+    gierrate = mdf_file.get('can0_ESP_Gierrate')
+    samples = list(gierrate.samples)
+    vz_samples = list(mdf_file.get('can0_ESP_VZ_Gierrate').samples)
+    for i in range(0, len(samples)):
+        if not int(vz_samples[i]):
+            samples[i] = samples[i] * -1
+    gierrate.samples = np.asarray(samples)
+
+    # filter file with VZ signals
+    filtered_mdf = mdf_file.filter(signals)
+    return filtered_mdf
+
+
+def resample(data, window_size):
+    column_names = list(data.head())
+
+    data_mean = data.resample('%sL' % window_size).mean()
+    new_column_names = dict()
+    for n in column_names:
+        new_column_names[n] = '%s_mean' % n
+    data_mean.rename(columns=new_column_names, inplace=True)
+
+    data_std = data.resample('%sL' % window_size).std()
+    new_column_names = dict()
+    for n in column_names:
+        new_column_names[n] = '%s_std' % n
+    data_std.rename(columns=new_column_names, inplace=True)
+
+    data_min = data.resample('%sL' % window_size).min()
+    new_column_names = dict()
+    for n in column_names:
+        new_column_names[n] = '%s_min' % n
+    data_min.rename(columns=new_column_names, inplace=True)
+
+    data_max = data.resample('%sL' % window_size).max()
+    new_column_names = dict()
+    for n in column_names:
+        new_column_names[n] = '%s_max' % n
+    data_max.rename(columns=new_column_names, inplace=True)
+
+    data_median = data.resample('%sL' % window_size).median()
+    new_column_names = dict()
+    for n in column_names:
+        new_column_names[n] = '%s_median' % n
+    data_median.rename(columns=new_column_names, inplace=True)
+
+    data = pd.concat([data_mean, data_max, data_median, data_min, data_std],
+                     axis=1,
+                     sort=False)
+    data.dropna(inplace=True)
+    return data
+
+
+def mdf_to_df(mdf_file, timestamp):
+    data = mdf_file.to_dataframe()
+    data.index = (data.index * 1000000000 + float(timestamp))
+    data.index = data.index.values.astype('datetime64[ns]')
+    data.index = pd.to_datetime(data.index)
+    return data
+
+
+def main():
+
+    my_parser = argparse.ArgumentParser(
+        description='Preprocesses mdf data and stores it in hdf5 file')
+    my_parser.add_argument('-c',
+                           '--config',
+                           action='store',
+                           metavar='config',
+                           type=str,
+                           required=True,
+                           help='Configuration file')
+
+    my_parser.add_argument('-r',
+                           action='store',
+                           metavar='reset',
+                           type=bool,
+                           default=False,
+                           help='Remove files from output dir')
+
+    args = my_parser.parse_args()
+    config_file = args.config
+    reset = args.reset
+
+    print('Starting data-preprocessor.py')
+
+    config = dict()
+    with open(config_file, 'r') as stream:
+        try:
+            config = yaml.safe_load(stream)
+        except yaml.YAMLError as exc:
+            print(exc)
+
+    if not os.path.isdir(config['measured_output']):
+        print('Measured directory does not exist')
+        exit(1)
+
+    if not os.path.isdir(config['output_dir']):
+        print('Output directory does not exist')
+        exit(1)
+
+    if reset:
+        os.system('rm -rf %s/*', config['output_dir'])
+        os.system('rm -rf %s/*', config['measured_output'])
+
+    while True:
+        for file in os.listdir(config['measured_output']):
+            print('New data available...')
+            if not file.endswith('.mf4'):
+                continue
+            timestamp = file.split('_')[0]
+            mdf_file = filter_mdf(
+                os.path.join(config['measured_output'], file),
+                config['signals'])
+            df = mdf_to_df(mdf_file, timestamp)
+            df = resample(df, config['window_size'])
+            df = df[df['can0_ESP_v_Signal_max'] != 0]
+            outfile = os.path.join(config['output_dir'], timestamp, '.hdf')
+            df.to_hdf(outfile, 'driverX', append=True)
+
+            print('Processed %s' % outfile)
+            # move file to backup
+            os.rename(os.path.join(config['measured_output'], file),
+                      os.path.join(config['backup_output'], file))
+
+        time.sleep(5)
+
+
+main()
+\end{lstlisting}
+
+\subsubsection{ML-Model Trainer, ML-Model Predictor, Result Presenter}
+
+\begin{lstlisting}[frame=lines, caption=Ausschnitt Fahreridentifikation, captionpos=b, label = lst:a_sw_rf, numbers=left, language=Python, showstringspaces=false, basicstyle=\footnotesize]
+import argparse
+import pathlib
+import pandas as pd
+import os
+import sys
+import h5py
+import yaml
+import numpy as np
+import random
+import time
+from sklearn.utils import shuffle
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+
+
+def send_SMS(message, number):
+    os.system('./sendSMS "%s" %s' % (message, number))
+
+
+def main():
+
+    my_parser = argparse.ArgumentParser(
+        description='Random forest classifier for driver identification')
+    my_parser.add_argument('-c',
+                            '--config',
+                            action='store',
+                            metavar='config',
+                            type=str,
+                            required=True,
+                            help='Config file for rf parameter')
+
+    my_parser.add_argument('-s',
+                            '--simulation',
+                            action='store',
+                            metavar='simulation',
+                            type=bool,
+                            default=False,
+                            help='Enables simulation mode')
+
+    args = my_parser.parse_args()
+    config_file = args.config
+    simulation = args.simulation
+
+    print('Starting random-forest.py')
+
+    config = dict()
+    with open(config_file, 'r') as stream:
+        try:
+            config = yaml.safe_load(stream)
+        except yaml.YAMLError as exc:
+            print(exc)
+
+    if not os.path.isdir(config['input_dir']):
+        print('Input directory does not exist')
+        exit(1)
+
+    if not os.path.isdir(config['profile_dir']):
+        print('Directory with profiles does not exist')
+        exit(1)
+
+    if not os.path.isdir(config['sim_profile_dir']):
+        print('Directory with simulation profiles does not exist')
+        exit(1)
+
+    # read driver profiles
+    prfile_dir = config['profile_dir']
+    if simulation:
+        prfile_dir = config['sim_profile_dir']
+
+    frames = []
+    for file in os.listdir(prfile_dir):
+        if not file.endswith('.hdf'):
+            continue
+
+        data = pd.read_hdf(os.path.join(prfile_dir, file))
+        frames.append(data)
+
+    print('Loaded driver profiles')
+    profiles = pd.concat(frames, sort=False)
+    features = profiles.columns
+    features.drop('class')
+    X = profiles[features]
+    Y = profiles['class']
+
+    X = X.values
+    X = np.nan_to_num(X)
+    Y = Y.squeeze()
+    Y = Y.astype(int)
+
+    # Train RF Classifier
+    clf = RandomForestClassifier(n_estimators=config['n_estimators'],
+                                    n_jobs=-1,
+                                    random_state=1,
+                                    min_samples_leaf=config['min_samples_leaf'],
+                                    criterion=config['criterion'],
+                                    max_depth=config['max_depth'])
+    clf.fit(X, Y)
+    print('Created and trained ML Model')
+
+    all_data = []
+    while True:
+        data = []
+        for file in os.listdir(config['input_dir']):
+            if not file.endswith('.hdf'):
+                continue
+
+            time.sleep(1)
+            df = pd.read_hdf(os.path.join(config['input_dir'], file))
+            data.append(df)
+
+            # move file to backup
+            os.rename(os.path.join(config['input_dir'], file),
+                        os.path.join(config['backup_dir'], file))
+
+        if len(data) == 0:
+            continue
+
+        print('New data available...')
+        all_data = all_data + data
+
+        pdata = pd.concat(all_data, sort=False)
+        pdata = pdata.values
+
+        print('Predicting...')
+        pred = clf.predict(pdata)
+
+        print('Result:\n')
+        ids, counts = np.unique(pred, return_counts=True)
+        ids = dict(zip(ids, counts))
+        first = {'id': None, 'count': 0}
+        second = {'id': None, 'count': 0}
+        for id in t:
+            c = ids[id]
+            if c > first['count']:
+                first['count'] = c
+                first['id'] = id
+            elif c > second['count']:
+                second['count'] = c
+                second['id'] = id
+
+        first_conf = first['count'] / len(pred)
+        second_conf = second['count'] / len(pred)
+        diff = first_conf - second_conf
+        if diff >= 0.30 and first_conf >= 0.50:
+            if confirmed_id == first['id']:
+                confirmation_count += 1
+            else:
+                confirmed_id = first['id']
+                confirmation_count = 1
+        if confirmation_count == config['confirmation_count']:
+            send_SMS('\nDriver with id %s is driving' % first['id'],
+                        config['number'])
+            break
+
+        time.sleep(5)
+
+
+main()
+
+\end{lstlisting}
 \clearpage

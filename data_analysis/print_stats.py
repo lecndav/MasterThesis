@@ -99,21 +99,23 @@ def print_km(trips, dir):
   print('=====KM=====')
   total = 0
   for d in trips:
-    first = trips[d][0][0]
-    last = trips[d][-1][-1]
-    first = os.path.join(dir, '%s_%s.mf4' % (first, d))
-    last = os.path.join(dir, '%s_%s.mf4' % (last, d))
-    delta = get_km(last) - get_km(first)
+    delta = get_km(trips[d][-1], d, dir, True) - get_km(trips[d][0], d, dir, False)
     total += delta
     print('%s: %d' % (d, delta))
   print('Total: %d, Average: %d' % (total, total / len(trips)))
 
-def get_km(file):
-  mdf = MDF(file)
-  sig = mdf.get('can0_KBI_Kilometerstand_2')
-  for s in list(sig.samples):
-    if s != 0:
-      return s
+def get_km(trips, id, dir, revert):
+  if revert:
+    trips.reverse()
+  for t in trips:
+    file = os.path.join(dir, '%s_%s.mf4' % (t, id))
+    mdf = MDF(file)
+    sig = mdf.get('can0_KBI_Kilometerstand_2')
+    for s in list(sig.samples):
+      if s != 0:
+        if s < 100000:
+          return s
+
 
 def main():
 

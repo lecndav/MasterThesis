@@ -3,16 +3,19 @@
 %  File    :  conclusion.tex
 %
 %  Authors :  David Lechner, FH Campus Wien, Austria
-% 
+%
 %  Created :  10 Oct 2019
-% 
+%
 %  Changed :  10 Oct 2019
-% 
+%
 %----------------------------------------------------------------
 
 
 \chapter{Zusammenfassung}
 \label{chap:conclusion}
 
-Zusammenfassung
+Die Masterarbeit hat sich mit dem Thema \textit{Fahreridentifikation mittels Machine-Learning} beschäftigt. Es basiert darauf, dass Autolenker ein individuelles Fahrverhalten im Straßenverkehr haben und anhand von Fahrzeugdaten identifiziert werden können. Das darin vorgestellte System verwendet den \textit{Random Forest} Algorithmus zur Klassifizierung von CAN-Nachrichten. Bei einem ersten Versuch konnten damit 85\% der Testdaten korrekt klassifiziert und somit die Methoden validiert werden. Das zweite Kapitel hat die Grundlagen, die dafür notwendig sind, vermittelt. Dabei ist besonders die Idee von \textit{Edge Computing} hervorzuheben, welches aufgrund des \textit{Internet of Things} und den immer höheren Datenmengen eine Alternative zu \textit{Cloud Computing} darstellt. Anstatt Sensorwerte in die \textit{Cloud} zur Verarbeitung zu senden, erfolgt sie direkt am Gerät. Zugleich trägt es zum Schutz der Privatsphäre bei, da potentiell persönliche Daten nirgends hin übertragen werden. Aus diesem Grund verfolgt die beschriebene Anwendung das gleiche Konzept. Weiters wurde versucht das ML-Modell durch geschickte Parametrisierung zu optimieren. Es konnte jedoch nur ein Prozent gewonnen werden. Während der weiteren Analyse hat sich eine Unstimmigkeit mit einem CAN-Signal herausgestellt, dass ein Genauigkeitsverlust von 5\% bedeutet hat. Das verdeutlicht, dass besonders für die \textit{Machine Learning} Anwendungen eine genaue Begutachtung der Daten essentiell ist.
 
+Im zweiten Teil der Arbeit wurde dargelegt, wie das System in ein Fahrzeug integriert werden kann. Die Vor- und Nachteile einer Architektur mit beziehungsweise ohne \textit{Cloud}-Anbindung sind aufgezeigt worden und der Nutzen von \textit{Edge Computing} in den Kontext gesetzt. Danach ist die Beschreibung der verwendeten \textit{Car Connectivity Unit} und Softwarekomponenten, bestehend aus dem \textit{CAN-Logger}, \textit{Data-Preprocessor}, \textit{ML-Model Trainer}, \textit{ML-Model Predictor} und \textit{Result Presenter} - gefolgt. Es wurden mehrere Ansätze zur Identifizierung besprochen und dabei die \textit{Differenz}-Methode als die sinnvollste erachtet. Der nächste Punkt hätte mehrere Testfahrten mit dem Auto beinhalten sollen. Da jedoch keines zur Verfügung gestellt werden konnte, wurde es mit den Testdaten simuliert. Die Ergebnisse waren mit vier Fahrprofilen sehr vielversprechend, sodass 97\% der Fahrten dem korrekten Fahrer zugeordnet wurden.
+
+Zusammenfassend ist eine Fahreridentifikation basierend am Fahrverhalten mit den vorhandenen Daten und existierenden Methoden durchführbar. Eine generelle Aussage über den Einsatz unter realen Bedingungen kann nicht getroffen werden, da zum einen der Feldtest nicht stattgefunden hat und zum anderen auch zu wenig Daten von zu wenig Fahrerinnen vorhanden waren und somit sind sie nicht repräsentativ. Es ist trotzdem vorstellbar, das System für Anwendungen, welche eine limitierte Anzahl an Fahrer involviert und keine unmittelbare Identifizierung benötigt, einzusetzen.
