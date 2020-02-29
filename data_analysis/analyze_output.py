@@ -7,8 +7,9 @@ import h5py
 import yaml
 import numpy as np
 import random
-from collections import Counter
+import seaborn as sns
 import matplotlib.pyplot as plt
+from collections import Counter
 from sklearn.utils import shuffle
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
@@ -65,10 +66,10 @@ def main():
     data = pd.concat(frames, sort=False)
 
     trips = get_trips_from_hdf(data)
-    time = 20 * 30
+    time = 30 * 30
 
     tdata = get_data_from_random_trips(trips, data, time)
-    tdata = tdata[tdata['can0_ESP_Fahrer_bremst_max'] == 0]
+    # tdata = tdata[tdata['can0_ESP_Bremsdruck_median'] < 0.5]
     features = config['features'][:config['feature_count']]
     X = tdata[features]
     Y = tdata['class']
@@ -99,22 +100,34 @@ def main():
             x2 += 1
         i += 1
 
-    fig1 = plt.figure()
-    plt.title('False')
-    # false_x['can0_ESP_Querbeschleunigung_mean'].plot()
-    plt.scatter(x=range(len(false_x)),
-                y=false_x['can0_LWI_Lenkradw_Geschw_median'],
-                s=2)
-    fig2 = plt.figure()
-    plt.title('True')
-    # true_x['can0_ESP_Querbeschleunigung_mean'].plot()
-    plt.scatter(x=range(len(true_x)),
-                y=true_x['can0_LWI_Lenkradw_Geschw_median'],
-                s=2)
+
 
     acc = metrics.accuracy_score(y_test, y_pred)
     print(acc)
+
+    # plot signal for true and false datapoints
+    if False:
+        fig1 = plt.figure()
+        plt.title('False')
+        plt.scatter(x=range(len(false_x)),
+                    y=false_x['can0_ESP_Bremsdruck_median'],
+                    s=2)
+        fig2 = plt.figure()
+        plt.title('True')
+        plt.scatter(x=range(len(true_x)),
+                    y=true_x['can0_ESP_Bremsdruck_median'],
+                    s=2)
+    #
+
+    # plot distribution
+    if True:
+        figdist = plt.figure()
+        sns.distplot(false_x['can0_ESP_Bremsdruck_mean'], color='blue', hist=False, kde=True)
+        sns.distplot(true_x['can0_ESP_Bremsdruck_mean'], color='orange', hist=False, kde=True)
+    #
+
     # plt.show()
+
 
 
 main()
