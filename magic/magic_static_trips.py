@@ -13,7 +13,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'lib'))
-from helper import get_trips_from_hdf, get_data_from_random_trips, get_data_from_nice_trips
+from helper import get_trips_from_hdf, get_data_from_random_trips, get_data_from_nice_trips, get_right_n_wrong_dp
 
 
 def main():
@@ -76,19 +76,38 @@ def main():
 
   data = pd.concat(frames, sort=False)
 
-  tdata, nice_trips = get_data_from_nice_trips(data, nice_trips, 10)
-
   features = config['features'][:config['feature_count']]
-  X = tdata[features]
-  Y = tdata['class']
-  X = np.nan_to_num(X)
-  X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.3)
+
+  data['class'] = data['class'].astype(int)
+  train_data, nice_trips = get_data_from_nice_trips(data, nice_trips, 5)
+  X_train = train_data[features]
+  X_train = X_train.values
+  y_train = train_data['class']
+  y_train = y_train.squeeze()
+  y_train = y_train.astype(int)
 
   clf = RandomForestClassifier(n_estimators=config['n_estimators'], n_jobs=-1, random_state=1, min_samples_leaf=config['min_samples_leaf'], criterion=config['criterion'], max_depth=None)
   clf.fit(X_train, y_train)
-  y_pred = clf.predict(X_test)
 
-  acc = metrics.accuracy_score(y_test, y_pred)
-  print(acc)
+  ids = data['class'].unique()
+  for id in ids:
+    while len(nice_trips[id]) > 0:
+      ttrips = {}
+      ttrips[id] = nice_trips[id]
+      test_data, temp = get_data_from_nice_trips(data, ttrips, 1)
+      nice_trips[id] = temp[id]
+      if len(test_data) < 1:
+        continue
+      X_test = test_data[features]
+      X_test = X_test.values
+      y_test = test_data['class']
+      y_test = y_test.squeeze()
+
+      y_pred = clf.predict(X_test)
+      acc = metrics.accuracy_score(y_test, y_pred)
+      print(id, acc)
+
+    # true_x, false_x = get_right_n_wrong_dp(y_pred, X_test, y_test,
+                                            # features)
 
 main()

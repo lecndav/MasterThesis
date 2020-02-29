@@ -43,9 +43,10 @@ def main():
     if not file.endswith('.hdf'):
       continue
     print('process %s' % file)
+    id = file.split('_')[0]
     data = pd.read_hdf(os.path.join(hdf5_input, file))
-    data['class'] = i
-    data.to_hdf(os.path.join(hdf5_output, '%d_%s' % (i, file)), file.split('.')[0])
+    data['class'] = id
+    data.to_hdf(os.path.join(hdf5_output, file), id)
     i += 1
 
 

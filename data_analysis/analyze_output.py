@@ -7,8 +7,9 @@ import h5py
 import yaml
 import numpy as np
 import random
-import matplotlib.pyplot as plt
 import seaborn as sns
+import matplotlib.pyplot as plt
+from collections import Counter
 from sklearn.utils import shuffle
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
@@ -63,24 +64,18 @@ def main():
         frames.append(data)
 
     data = pd.concat(frames, sort=False)
-    data = data[data['can0_ESP_v_Signal_median'] > 0]
 
     trips = get_trips_from_hdf(data)
-    time = 20 * 30
+    time = 30 * 30
 
+    tdata, = get_data_from_random_trips(trips, data, time)
+    # tdata = tdata[tdata['can0_ESP_Bremsdruck_median'] < 0.5]
     features = config['features'][:config['feature_count']]
-
-    train_data, trips = get_data_from_random_trips(trips, data, time, 5)
-    # X = tdata[features]
-    # Y = tdata['class']
-    # X = np.nan_to_num(X)
-    # X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.3)
-
-    X_train = train_data[features]
-    X_train = X_train.values
-    y_train = train_data['class']
-    y_train = y_train.squeeze()
-    y_train = y_train.astype(int)
+    print(tdata)
+    X = tdata[features]
+    Y = tdata['class']
+    X = np.nan_to_num(X)
+    X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.3)
 
     clf = RandomForestClassifier(n_estimators=config['n_estimators'],
                                  n_jobs=-1,
@@ -89,43 +84,35 @@ def main():
                                  criterion=config['criterion'],
                                  max_depth=None)
     clf.fit(X_train, y_train)
+    y_pred = clf.predict(X_test)
+    true_x, false_x = get_right_n_wrong_dp(y_pred, X_test, y_test, features)
 
-    ids = data['class'].unique()
-    for id in ids:
-        ttrips = {}
-        ttrips[id] = trips[id]
-        test_data, _ = get_data_from_random_trips(ttrips, data, 5*30)
-        X_test = test_data[features]
-        X_test = X_test.values
-        y_test = test_data['class']
-        y_test = y_test.squeeze()
+    acc = metrics.accuracy_score(y_test, y_pred)
+    print(acc)
 
-        y_pred = clf.predict(X_test)
-        acc = metrics.accuracy_score(y_test, y_pred)
-        print(id, acc)
+    # plot signal for true and false datapoints
+    if False:
+        fig1 = plt.figure()
+        plt.title('False')
+        plt.scatter(x=range(len(false_x)),
+                    y=false_x['can0_ESP_Bremsdruck_median'],
+                    s=2)
+        fig2 = plt.figure()
+        plt.title('True')
+        plt.scatter(x=range(len(true_x)),
+                    y=true_x['can0_ESP_Bremsdruck_median'],
+                    s=2)
+    #
 
-        true_x, false_x = get_right_n_wrong_dp(y_pred, X_test, y_test,
-                                               features)
-
+    # plot distribution
+    if True:
         figdist = plt.figure()
-        train_data[train_data['class']==id]['can0_ESP_v_Signal_median'].plot()
-        # plt.scatter(x=range(len(false_x)),
-        #             y=false_x['can0_ESP_v_Signal_median'],
-        #             s=2)
-        # sns.distplot(false_x['can0_ESP_v_Signal_median'],
-        #              color='blue',
-        #              hist=False,
-        #              kde=True)
-        figdist = plt.figure()
-        test_data['can0_ESP_v_Signal_median'].plot()
-        # plt.scatter(x=range(len(true_x)),
-        #             y=true_x['can0_ESP_v_Signal_median'],
-        #             s=2)
-        # sns.distplot(true_x['can0_ESP_v_Signal_median'],
-        #              color='orange',
-        #              hist=False,
-        #              kde=True)
-        plt.show()
+        sns.distplot(false_x['can0_ESP_Bremsdruck_mean'], color='blue', hist=False, kde=True)
+        sns.distplot(true_x['can0_ESP_Bremsdruck_mean'], color='orange', hist=False, kde=True)
+    #
+
+    plt.show()
+
 
 
 main()
