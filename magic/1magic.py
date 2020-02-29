@@ -63,17 +63,36 @@ def main():
   trips = get_trips_from_hdf(data)
   time = 20 * 30
 
-  tdata = get_data_from_random_trips(trips, data, time)
   features = config['features'][:config['feature_count']]
-  X = tdata[features]
-  Y = tdata['class']
-  X = np.nan_to_num(X)
-  X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.3)
+
+  print('h1')
+  tdata, trips = get_data_from_random_trips(trips, data, time, 10)
+  print('h2')
+  # X = tdata[features]
+  # Y = tdata['class']
+  # X = np.nan_to_num(X)
+  # X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.3)
+
+  X_train = tdata[features]
+  X_train = X_train.values
+  y_train = tdata['class']
+  y_train = y_train.squeeze()
+  y_train = y_train.astype(int)
+
+  tdata, trips = get_data_from_random_trips(trips, data, 5, 1)
+  X_test = tdata[features]
+  X_test = X_test.values
+  y_test = tdata['class']
+  y_test = y_test.squeeze()
+  y_test = y_test.astype(int)
+
+  print('h3')
 
   clf = RandomForestClassifier(n_estimators=config['n_estimators'], n_jobs=-1, random_state=1, min_samples_leaf=config['min_samples_leaf'], criterion=config['criterion'], max_depth=None)
   clf.fit(X_train, y_train)
   y_pred = clf.predict(X_test)
 
+  print('h4')
   acc = metrics.accuracy_score(y_test, y_pred)
   print(acc)
 

@@ -65,7 +65,15 @@ def get_trips_from_hdf(data):
                 tlast = t
     return trips
 
-def get_data_from_random_trips(trips, data, time):
+def get_data_from_random_trips(trips, data, time, count=1):
+    tripf = []
+    for i in range(count):
+        tdata, trips = _get_data_from_random_trips(trips, data, time)
+        tripf.append(tdata)
+
+    return pd.concat(tripf, sort=False), trips
+
+def _get_data_from_random_trips(trips, data, time):
     frames = []
     for d in trips:
         while True:
@@ -92,9 +100,11 @@ def get_data_from_random_trips(trips, data, time):
                 continue
             tmp = tdata.loc[mask]
             frames.append(tmp)
+            for i in range((etrip - strip) + 1):
+                del trips[d][strip]
             break
 
-    return pd.concat(frames, sort=False)
+    return pd.concat(frames, sort=False), trips
 
 def get_data_from_nice_trips(data, nice_trips, count):
     frames = []
