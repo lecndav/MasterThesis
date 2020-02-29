@@ -219,3 +219,23 @@ def train_test_split_bremsdruck(data, test_size):
     X_test = np.nan_to_num(X_test)
 
     return X_train, X_test, Y_train, Y_test
+
+
+def get_right_n_wrong_dp(y_pred, X_test, y_test, features):
+    i = 0
+    x1 = 0
+    x2 = 0
+    false_x = pd.DataFrame(columns=features)
+    true_x = pd.DataFrame(columns=features)
+    false_y = []
+    for c in y_pred:
+        if c != y_test[i]:
+            false_x.loc[x1] = X_test[i]
+            false_y.append(y_test[i])
+            x1 += 1
+        else:
+            true_x.loc[x2] = X_test[i]
+            x2 += 1
+        i += 1
+
+    return true_x, false_x
