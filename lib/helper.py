@@ -116,7 +116,7 @@ def get_data_from_nice_trips(data, nice_trips, count):
             r = randint(0, len(nice_trips) -1)
             trip = nice_trips[id][r]
             del nice_trips[id][r]
-            tdata = data[data['class'] == int(id)]
+            tdata = data[data['class'] == id]
             frames.append(tdata.loc[trip['start']:trip['end']])
 
 
