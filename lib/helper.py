@@ -96,6 +96,21 @@ def get_data_from_random_trips(trips, data, time):
 
     return pd.concat(frames, sort=False)
 
+def get_data_from_nice_trips(data, nice_trips, count):
+    frames = []
+    for id in nice_trips:
+        for i in range(count):
+            if len(nice_trips[id]) == 0:
+                break
+
+            r = randint(0, len(nice_trips) -1)
+            trip = nice_trips[id][r]
+            del nice_trips[id][r]
+            tdata = data[data['class'] == int(id)]
+            frames.append(tdata.loc[trip['start']:trip['end']])
+
+
+    return pd.concat(frames, sort=False), nice_trips
 
 def train_test_split_trip_start(data, test_size):
     train_time = 10 * 60
