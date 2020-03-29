@@ -1,0 +1,14 @@
+[Unit]
+Description=Daemon for HDF Simulator
+After=data-preprocessor
+
+[Service]
+ExecStart=/usr/bin/python3 /usr/bin/hdf-simulator.py -c /etc/hdf-simulator/config.yml
+Type=idle
+User=root
+Group=root
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

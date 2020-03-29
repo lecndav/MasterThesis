@@ -1,0 +1,10 @@
+input_dir: /data/preprocessed
+profile_dir: /data/profiles
+sim_profile_dir: /data/sim_profiles
+backup_dir: /data/hdf_backup
+criterion: gini
+max_depth: Null
+n_estimators: 300
+min_samples_leaf: 1
+min_samples_split: 1
+threshold: 75

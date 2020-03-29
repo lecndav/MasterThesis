@@ -1,0 +1,14 @@
+[Unit]
+Description=Daemon for data-preprocessor
+After=canmeasured
+
+[Service]
+ExecStart=/usr/bin/python3 /usr/bin/data-preprocessor.py -c /etc/data-preprocessor/config.yml
+Type=idle
+User=root
+Group=root
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

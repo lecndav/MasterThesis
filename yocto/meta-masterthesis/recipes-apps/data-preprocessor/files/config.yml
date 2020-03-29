@@ -1,0 +1,16 @@
+measured_output: /data/measured
+output_dir: /data/preprocessed
+backup_dir: /data/mdf_backup
+window_size: 2000
+signals:
+  - can0_LWI_Lenkradwinkel
+  - can0_ESP_Fahrer_bremst
+  - can0_ESP_Bremsdruck
+  - can0_MO_Drehzahl_01
+  - can0_ESP_v_Signal
+  - can0_LWI_Lenkradw_Geschw
+  - can0_ESP_Querbeschleunigung
+  - can0_ESP_Laengsbeschl
+  - can0_ESP_Gierrate
+  - can0_MO_Fahrpedalrohwert_01
+  - can0_MO_Kuppl_schalter

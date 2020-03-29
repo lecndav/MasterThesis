@@ -1,0 +1,14 @@
+[Unit]
+Description=Daemon for listening on can interfaces and writing to measured in mf4 format
+After=measured
+
+[Service]
+ExecStart=/usr/bin/canmeasured -c /etc/canmeasured/config.yml
+Type=idle
+User=root
+Group=root
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

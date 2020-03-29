@@ -1,0 +1,13 @@
+[Unit]
+Description=Daemon for writing MDF4 measurement files
+
+[Service]
+ExecStart=/usr/bin/measured /etc/measured.conf
+User=root
+Group=root
+Type=idle
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
