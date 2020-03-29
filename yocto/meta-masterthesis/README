@@ -1,0 +1,7 @@
+Project Layer for my master thesis
+
+Provides application and image recipes for the project.
+Image: prj-masterthesis
+
+Depends on
+ - meta-alen

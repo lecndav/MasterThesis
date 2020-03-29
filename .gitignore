@@ -2,6 +2,7 @@
 *.mf4
 __pycache__
 *.hdf
+!yocto/meta-masterthesis/**/*.hdf
 .vscode
 Documents/other
 results

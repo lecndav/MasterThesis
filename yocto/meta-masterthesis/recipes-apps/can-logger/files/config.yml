@@ -1,0 +1,8 @@
+Name: "CanMeasured"
+Network: "unix"
+Address: "/var/run/measured.sk"
+Providers:
+  - ID: "can"
+    Source: "can0"
+    Name: "FCan"
+    Config: "/etc/dbc/fcan.dbc"

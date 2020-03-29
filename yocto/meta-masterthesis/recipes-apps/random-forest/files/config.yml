@@ -1,0 +1,11 @@
+input_dir: /Users/davidlechner/Documents/MasterThesis/simulation/test1/preprocessed
+profile_dir: /Users/davidlechner/Documents/MasterThesis/simulation/test1/profiles
+sim_profile_dir: /Users/davidlechner/Documents/MasterThesis/simulation/test1/profiles
+backup_dir: /Users/davidlechner/Documents/MasterThesis/simulation/test1/backup
+criterion: gini
+max_depth: Null
+n_estimators: 300
+min_samples_leaf: 1
+min_samples_split: 1
+confirmation_count: 5
+number: '06644250616'

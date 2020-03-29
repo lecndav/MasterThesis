@@ -1,0 +1,75 @@
+criterion: gini
+max_depth: Null
+n_estimators: 300
+min_samples_leaf: 1
+min_samples_split: 1
+confirmation_count: 5
+thief_count: 10
+number: '06644250616'
+feature_count: 65
+features:
+  - can0_ESP_Bremsdruck_median
+  - can0_ESP_Bremsdruck_min
+  - can0_ESP_Bremsdruck_std
+  - can0_MO_Fahrpedalrohwert_01_std
+  - can0_ESP_Querbeschleunigung_std
+  - can0_ESP_Bremsdruck_mean
+  - can0_MO_Drehzahl_01_min
+  - can0_ESP_Laengsbeschl_std
+  - can0_MO_Fahrpedalrohwert_01_min
+  - can0_ESP_v_Signal_max
+  - can0_ESP_Laengsbeschl_min
+  - can0_ESP_Bremsdruck_max
+  - can0_ESP_v_Signal_std
+  - can0_MO_Drehzahl_01_std
+  - can0_ESP_v_Signal_min
+  - can0_ESP_Querbeschleunigung_max
+  - can0_LWI_Lenkradwinkel_std
+  - can0_MO_Fahrpedalrohwert_01_max
+  - can0_MO_Drehzahl_01_max
+  - can0_ESP_v_Signal_median
+  - can0_LWI_Lenkradw_Geschw_mean
+  - can0_LWI_Lenkradw_Geschw_std
+  - can0_ESP_v_Signal_mean
+  - can0_MO_Fahrpedalrohwert_01_mean
+  - can0_ESP_Fahrer_bremst_mean
+  - can0_ESP_Laengsbeschl_max
+  - can0_MO_Drehzahl_01_median
+  - can0_ESP_Querbeschleunigung_mean
+  - can0_ESP_Gierrate_std
+  - can0_ESP_Querbeschleunigung_median
+  - can0_ESP_Laengsbeschl_median
+  - can0_LWI_Lenkradwinkel_median
+  - can0_MO_Drehzahl_01_mean
+  - can0_ESP_Fahrer_bremst_std
+  - can0_LWI_Lenkradw_Geschw_max
+  - can0_ESP_Gierrate_max
+  - can0_MO_Kuppl_schalter_std
+  - can0_LWI_Lenkradwinkel_max
+  - can0_ESP_Laengsbeschl_mean
+  - can0_ESP_Gierrate_median
+  - can0_ESP_Querbeschleunigung_min
+  - can0_ESP_Gierrate_mean
+  - can0_ESP_HR_Fahrtrichtung_min
+  - can0_ESP_HR_Fahrtrichtung_median
+  - can0_LWI_Lenkradwinkel_min
+  - can0_ESP_HL_Fahrtrichtung_mean
+  - can0_ESP_Gierrate_min
+  - can0_LWI_Lenkradwinkel_mean
+  - can0_ESP_HR_Fahrtrichtung_max
+  - can0_ESP_HR_Fahrtrichtung_std
+  - can0_LWI_Lenkradw_Geschw_median
+  - can0_ESP_HL_Fahrtrichtung_std
+  - can0_ESP_HL_Fahrtrichtung_min
+  - can0_ESP_HR_Fahrtrichtung_mean
+  - can0_MO_Kuppl_schalter_min
+  - can0_MO_Kuppl_schalter_median
+  - can0_ESP_HL_Fahrtrichtung_max
+  - can0_LWI_Lenkradw_Geschw_min
+  - can0_MO_Fahrpedalrohwert_01_median
+  - can0_MO_Kuppl_schalter_mean
+  - can0_ESP_HL_Fahrtrichtung_median
+  - can0_ESP_Fahrer_bremst_min
+  - can0_MO_Kuppl_schalter_max
+  - can0_ESP_Fahrer_bremst_max
+  - can0_ESP_Fahrer_bremst_median

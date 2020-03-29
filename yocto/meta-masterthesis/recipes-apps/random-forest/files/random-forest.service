@@ -1,0 +1,15 @@
+[Unit]
+Description=Daemon for Random Forest Classifier
+After=data-preprocessor
+
+[Service]
+ExecStartPre=source /data/virtualenv/bin/activate
+ExecStart=/usr/bin/python3 /usr/bin/random-forest.py -c /etc/random-forest/config.yml
+Type=idle
+User=root
+Group=root
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

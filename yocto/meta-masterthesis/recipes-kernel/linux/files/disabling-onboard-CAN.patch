@@ -1,0 +1,25 @@
+From 8b6facd3c1bde1a79b859fbbe85f77050cdbff37 Mon Sep 17 00:00:00 2001
+From: Vinothkumar <Vinothkumar.Eswaran@de.bosch.com>
+Date: Mon, 20 Aug 2018 10:12:20 +0200
+Subject: [PATCH] disabling-onboard-CAN
+
+---
+ arch/arm/boot/dts/imx7d-sbc-iot-imx7-can.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/imx7d-sbc-iot-imx7-can.dts b/arch/arm/boot/dts/imx7d-sbc-iot-imx7-can.dts
+index 6066b40..12c6274 100644
+--- a/arch/arm/boot/dts/imx7d-sbc-iot-imx7-can.dts
++++ b/arch/arm/boot/dts/imx7d-sbc-iot-imx7-can.dts
+@@ -14,7 +14,7 @@
+ &flexcan2 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_flexcan2>;
+-	status = "okay";
++	status = "disable";
+ };
+ 
+ &iomuxc {
+-- 
+2.7.4
+

@@ -1,0 +1,5 @@
+[Socket]
+ListenStream=/var/run/measured.sk
+
+[Install]
+WantedBy=sockets.target
