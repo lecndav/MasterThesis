@@ -10,22 +10,6 @@ import time
 from random import randint, shuffle
 
 
-def get_data_from_nice_trips(data, nice_trips, count):
-    frames = []
-    for id in nice_trips:
-        for i in range(count):
-            if len(nice_trips[id]) == 0:
-                break
-
-            r = randint(0, len(nice_trips) - 1)
-            trip = nice_trips[id][r]
-            del nice_trips[id][r]
-            tdata = data[data['class'] == int(id)]
-            frames.append(tdata.loc[trip['start']:trip['end']])
-
-    return pd.concat(frames, sort=False), nice_trips
-
-
 def main():
 
     my_parser = argparse.ArgumentParser(description='Simulates HDF files')
@@ -60,17 +44,15 @@ def main():
     data = pd.read_hdf(config['input_file'])
     print('Loaded driver data')
 
-    while True:
-        tdata, _ = get_data_from_nice_trips(data, config['trips'], 1)
-        duration = np.timedelta64(60, 's')
-        for i in range(int(len(tdata) / 30)):
-            start = tdata.index[i * 30]
-            tmp = tdata[start:start + duration]
-            tmp.to_hdf(
-                os.path.join(config['output_dir'], str(start.value), '.hdf'),
-                'driverX')
-            print('Provided 1 minute data')
-            time.sleep(60)
+    duration = np.timedelta64(500, 's')
+    for i in range(int(len(data) / 30)):
+        start = data.index[i * 30]
+        tmp = data[start:start + duration]
+        output_file = os.path.join(config['output_dir'], str(start.value) + '.hdf')
+        print(output_file)
+        tmp.to_hdf(output_file,'driverX')
+        print('Provided 1 minute data')
+        time.sleep(5)
 
 
 main()

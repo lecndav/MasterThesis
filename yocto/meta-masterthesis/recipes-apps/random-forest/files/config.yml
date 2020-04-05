@@ -1,10 +1,10 @@
-input_dir: /data/preprocessed
-profile_dir: /data/profiles
-sim_profile_dir: /data/sim_profiles
-backup_dir: /data/hdf_backup
+input_dir: /Users/davidlechner/Documents/MasterThesis/simulation/test1/preprocessed
+profile_dir: /Users/davidlechner/Documents/MasterThesis/simulation/test1/profiles
+sim_profile_dir: /Users/davidlechner/Documents/MasterThesis/simulation/test1/profiles
+backup_dir: /Users/davidlechner/Documents/MasterThesis/simulation/test1/backup
 criterion: gini
 max_depth: Null
 n_estimators: 300
 min_samples_leaf: 1
 min_samples_split: 1
-threshold: 75
+threshold: 0.75

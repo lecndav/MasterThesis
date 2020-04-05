@@ -36,7 +36,7 @@ def main():
 
     args = my_parser.parse_args()
     config_file = args.config
-    simulation = args.simulaiton
+    simulation = args.simulation
 
     print('Starting random-forest.py')
 
@@ -65,7 +65,7 @@ def main():
         prfile_dir = config['sim_profile_dir']
 
     frames = []
-    for file in os.listdir(profiles_dir):
+    for file in os.listdir(prfile_dir):
         if not file.endswith('.hdf'):
             continue
 
@@ -75,7 +75,7 @@ def main():
     print('Loaded driver profiles')
     profiles = pd.concat(frames, sort=False)
     features = profiles.columns
-    features.remove('class')
+    features.drop('class')
     X = profiles[features]
     Y = profiles['class']
 
@@ -101,6 +101,7 @@ def main():
             if not file.endswith('.hdf'):
                 continue
 
+            time.sleep(1)
             df = pd.read_hdf(os.path.join(config['input_dir'], file))
             data.append(df)
 
@@ -112,16 +113,21 @@ def main():
             continue
 
         print('New data available...')
-        all_data.append(data)
-        pdata = all_data[features].values
+        all_data = all_data + data
+
+        pdata = pd.concat(all_data, sort=False)
+        pdata = pdata.values
 
         print('Predicting...')
         pred = clf.predict(pdata)
 
         print('Result:\n')
         count = 0
-        for id in pred.unique():
-            c = pred.count(id)
+        unique, counts = np.unique(pred, return_counts=True)
+        t = dict(zip(unique, counts))
+        print(t)
+        for id in t:
+            c = t[id]
             print('%d: %f' % (id, c / len(pred)))
             if c > count:
                 count = c
