@@ -10,8 +10,23 @@ import random
 import time
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'lib'))
-from helper import get_data_from_nice_trips
+
+
+def get_data_from_nice_trips(data, nice_trips, count):
+    frames = []
+    for id in data['class'].unique():
+        # id = str(id)
+        for i in range(count):
+            r = randint(0, len(nice_trips[id]) - 1)
+            if len(nice_trips[id][r]) == 0:
+                break
+
+            trip = nice_trips[id][r]
+            del nice_trips[id][r]
+            tdata = data[data['class'] == id]
+            frames.append(tdata.loc[trip['start']:trip['end']])
+
+    return pd.concat(frames, sort=False), nice_trips
 
 
 def main():
