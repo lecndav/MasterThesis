@@ -109,12 +109,12 @@ def _get_data_from_random_trips(trips, data, time):
 def get_data_from_nice_trips(data, nice_trips, count):
     frames = []
     for id in data['class'].unique():
-        id = str(id)
+        # id = str(id)
         for i in range(count):
-            if len(nice_trips[id]) == 0:
+            r = randint(0, len(nice_trips[id]) - 1)
+            if len(nice_trips[id][r]) == 0:
                 break
 
-            r = randint(0, len(nice_trips[id]) -1)
             trip = nice_trips[id][r]
             del nice_trips[id][r]
             tdata = data[data['class'] == id]
