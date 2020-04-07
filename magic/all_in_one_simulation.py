@@ -3,11 +3,10 @@ import pathlib
 import pandas as pd
 import os
 import sys
-import h5py
 import yaml
 import numpy as np
-import random
 import time
+from random import randint
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
 
@@ -31,6 +30,7 @@ def get_data_from_nice_trips(data, nice_trips, count):
 
 def main():
 
+    print('Started')
     my_parser = argparse.ArgumentParser(
         description='All in one simulation')
     my_parser.add_argument('-p',
@@ -91,6 +91,7 @@ def main():
         frames.append(data)
 
     data = pd.concat(frames, sort=False)
+    print('Loaded profiles')
 
     features = config['features'][:config['feature_count']]
 
